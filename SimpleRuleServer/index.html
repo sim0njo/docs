@@ -1,0 +1,1380 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Simple Rule Server explained.">
+      
+      
+      
+        <link rel="canonical" href="https://sim0njo.github.io/phc2mqtt/SimpleRuleServer/">
+      
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.2">
+    
+    
+      
+        <title>Simple Rule Server - Jo Simons</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.f7951f6f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Barlow:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Barlow";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#intro" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Jo Simons" class="md-header__button md-logo" aria-label="Jo Simons" data-md-component="logo">
+      
+  <img src="../img/home.gif" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jo Simons
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Simple Rule Server
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../Phc2Mqtt/" class="md-tabs__link md-tabs__link--active">
+        Phc2Mqtt
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../Downloads/" class="md-tabs__link">
+      Downloads
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="http://sim0njo.github.io/install" class="md-tabs__link">
+      ESP Web Installer
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Jo Simons" class="md-nav__button md-logo" aria-label="Jo Simons" data-md-component="logo">
+      
+  <img src="../img/home.gif" alt="logo">
+
+    </a>
+    Jo Simons
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Phc2Mqtt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Phc2Mqtt" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Phc2Mqtt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Phc2Mqtt/" class="md-nav__link">
+        User Manual
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PhcModules/" class="md-nav__link">
+        Phc Modules
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Simple Rule Server
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Simple Rule Server
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#intro" class="md-nav__link">
+    Intro
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rule-syntax" class="md-nav__link">
+    Rule Syntax
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-objects" class="md-nav__link">
+    Internal Objects
+  </a>
+  
+    <nav class="md-nav" aria-label="Internal Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clock-object" class="md-nav__link">
+    Clock Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-object" class="md-nav__link">
+    State Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-object" class="md-nav__link">
+    System Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timer-object" class="md-nav__link">
+    Timer Object
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#events" class="md-nav__link">
+    Events
+  </a>
+  
+    <nav class="md-nav" aria-label="Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topic-formats" class="md-nav__link">
+    Topic Formats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-formats" class="md-nav__link">
+    Data Formats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-sources" class="md-nav__link">
+    Event Sources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-filtering" class="md-nav__link">
+    Event Filtering
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditions" class="md-nav__link">
+    Conditions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rules" class="md-nav__link">
+    Rules
+  </a>
+  
+    <nav class="md-nav" aria-label="Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init-rule" class="md-nav__link">
+    Init Rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-rule" class="md-nav__link">
+    Exit Rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-rule" class="md-nav__link">
+    State Rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#action-rule" class="md-nav__link">
+    Action Rule
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rule-samples" class="md-nav__link">
+    Rule Samples
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Upgrading/" class="md-nav__link">
+        Upgrading
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Downloads/" class="md-nav__link">
+        Downloads
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="http://sim0njo.github.io/install" class="md-nav__link">
+        ESP Web Installer
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#intro" class="md-nav__link">
+    Intro
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rule-syntax" class="md-nav__link">
+    Rule Syntax
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-objects" class="md-nav__link">
+    Internal Objects
+  </a>
+  
+    <nav class="md-nav" aria-label="Internal Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clock-object" class="md-nav__link">
+    Clock Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-object" class="md-nav__link">
+    State Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-object" class="md-nav__link">
+    System Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timer-object" class="md-nav__link">
+    Timer Object
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#events" class="md-nav__link">
+    Events
+  </a>
+  
+    <nav class="md-nav" aria-label="Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topic-formats" class="md-nav__link">
+    Topic Formats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-formats" class="md-nav__link">
+    Data Formats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-sources" class="md-nav__link">
+    Event Sources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-filtering" class="md-nav__link">
+    Event Filtering
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditions" class="md-nav__link">
+    Conditions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rules" class="md-nav__link">
+    Rules
+  </a>
+  
+    <nav class="md-nav" aria-label="Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init-rule" class="md-nav__link">
+    Init Rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-rule" class="md-nav__link">
+    Exit Rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-rule" class="md-nav__link">
+    State Rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#action-rule" class="md-nav__link">
+    Action Rule
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rule-samples" class="md-nav__link">
+    Rule Samples
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+  <h1>Simple Rule Server</h1>
+
+<h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">~</a></h2>
+<p>The Simple Rule Server is a lightweight daemon to accomplish automation tasks and which is integrated into the <a href="../phc2mqtt">Phc2Mqtt</a> project,
+we will furthermore refer to it as <strong>SRSD</strong>.</p>
+<p>Operational behaviour of the SRSD is determined by a set of plain text rules stored in a file (rule-file) which is loaded when the SRSD starts.
+<a href="../phc2mqtt/#configure-simple-rule-server">Configure Simple Rule Server</a> describes how this rule-file is provisioned in the Phc2Mqtt project.</p>
+<p>In general above rules are triggered by an event (unless otherwise stated), 
+these can come from different sources like an MQTT client, HTTP server, a clock, a timer or the hosting application
+(in casu Phc2Mqtt provides system and STMD events).</p>
+<p>Some rules are able to store part of an event's data or a fixed value into an internal piece of memory called state objects, 
+these can be used in a condition.</p>
+<p>A condition compares the value of a state object to a fixed value to determine the flow of actions.</p>
+<p>Finally, the purpose of SRSD is to execute actions to realise the automation tasks, 
+this can be sending an MQTT message, execute a PHC command, starting or stopping a clock or timer, ...</p>
+<h2 id="rule-syntax">Rule Syntax<a class="headerlink" href="#rule-syntax" title="Permanent link">~</a></h2>
+<p>A rule can span 1 or more lines but the last line always ends on a semicolon (;).</p>
+<p>Each line in a rule carries 1 functional block as shown in the Backus-Naur format below, the split over lines is intentional and strict.</p>
+<p>A space character is used to separate rule fields and can thus not be used as data.</p>
+<p>Keywords and delimiters (between double quotes) in rules are case-insensitive, actual data strings are case-sensitive.</p>
+<div class="highlight"><pre><span></span><code><span class="na">rules          ::</span><span class="o">=</span> <span class="s">&quot;&lt;rules&gt;&quot;</span>
+                   <span class="na">*[&lt;rule&gt; | &lt;comment&gt;]</span>
+                   <span class="na">&quot;&lt;/rules&gt;&quot;</span>
+
+<span class="na">comment        ::</span><span class="o">=</span> <span class="s">&quot;;&quot; [&lt;string&gt;]</span>
+
+<span class="na">rule           ::</span><span class="o">=</span> <span class="s">(&lt;init rule&gt; | &lt;exit rule&gt; | &lt;state-rule&gt; | &lt;action-rule&gt;) &quot;;&quot;</span>
+
+<span class="na">init rule      ::</span><span class="o">=</span> <span class="s">&quot;init&quot; &lt;action&gt;</span>
+
+<span class="na">exit rule      ::</span><span class="o">=</span> <span class="s">&quot;exit&quot; &lt;action&gt;</span>
+
+<span class="na">state-rule     ::</span><span class="o">=</span> <span class="s">&quot;state&quot; &lt;event&gt; [&lt;modifier&gt;[&quot;=&quot;&lt;string&gt;]] [&quot;keys=&quot;&lt;key-filter&gt; *[&quot;,&quot; &lt;key-filter&gt;]]</span>
+  <span class="na">modifier     ::</span><span class="o">=</span> <span class="s">&quot;infix&quot; | &quot;prefix&quot; | &quot;name&quot; | &quot;etopic&quot;</span>
+
+<span class="na">action-rule    ::</span><span class="o">=</span> <span class="s">*(&quot;when&quot; &lt;event&gt;)  </span>
+                     <span class="na">*(&quot;then&quot; &lt;action&gt;)</span>
+
+<span class="na">action-rule    ::</span><span class="o">=</span> <span class="s">*(&quot;when&quot; &lt;event&gt;)  </span>
+                   <span class="na">&quot;if&quot; &lt;cond&gt;  </span>
+                     <span class="na">*[&quot;and&quot; &lt;cond&gt;]  </span>
+                       <span class="na">*(&quot;then&quot; &lt;action&gt;)  </span>
+                   <span class="na">*[&quot;elif&quot; &lt;cond&gt;  </span>
+                     <span class="na">*[&quot;and&quot; &lt;cond&gt;]  </span>
+                       <span class="na">*(&quot;then&quot; &lt;action&gt;)]  </span>
+                   <span class="na">*[&quot;else&quot; &lt;action&gt;]</span>
+
+<span class="na">event          ::</span><span class="o">=</span> <span class="s">&lt;source&gt; &quot;topic=&quot;&lt;topic-filter&gt; [&quot;data=&quot;&lt;data-filter&gt;]</span>
+  <span class="na">source       ::</span><span class="o">=</span> <span class="s">&quot;&lt;clock&quot; | &quot;&lt;http&quot; | &quot;&lt;mqtt&quot; | &quot;&lt;stmd&quot; | &quot;&lt;system&quot; | &quot;&lt;timer&quot;</span>
+
+<span class="na">cond           ::</span><span class="o">=</span> <span class="s">&lt;source&gt; &quot;topic=&quot;&lt;topic-name&gt; &quot;oper=&quot;&lt;oper&gt; &quot;value=&quot;&lt;string&gt;|&lt;number&gt;</span>
+  <span class="na">source       ::</span><span class="o">=</span> <span class="s">&quot;&lt;clock&quot; | &quot;&lt;state&quot; | &quot;&lt;timer&quot;</span>
+  <span class="na">oper         ::</span><span class="o">=</span> <span class="s">&quot;eq&quot; | &quot;ne&quot; | &quot;lt&quot; | &quot;gt&quot; | &quot;le&quot; | &quot;ge&quot;</span>
+
+<span class="na">action         ::</span><span class="o">=</span> <span class="s">&lt;clock-action&gt; | &lt;mqtt-action&gt; | &lt;stmd-action&gt; | &lt;state-action&gt; | &lt;timer-action&gt;</span>
+  <span class="na">clock-action ::</span><span class="o">=</span> <span class="s">&quot;&gt;clock topic=&quot;&lt;topic-name&gt; &quot;days=&quot;&lt;days&gt; [&quot;onhour=&quot;0-23 &quot;onminute=&quot;0-59 &quot;offhour=&quot;0-23 &quot;offminute=&quot;0-59]</span>
+  <span class="na">mqtt-action  ::</span><span class="o">=</span> <span class="s">&quot;&gt;mqtt  topic=&quot;&lt;topic-name&gt; &quot;data=&quot;&lt;string&gt;</span>
+  <span class="na">stmd-action  ::</span><span class="o">=</span> <span class="s">&quot;&gt;stmd  ccmd=&quot;&lt;phc-cmd&gt; *[&quot;;&quot; &lt;phc-cmd&gt;]</span>
+  <span class="na">state-action ::</span><span class="o">=</span> <span class="s">&quot;&gt;state topic=&quot;&lt;topic-name&gt; &quot;value=&quot;&lt;string&gt;|&lt;number&gt;</span>
+  <span class="na">timer-action ::</span><span class="o">=</span> <span class="s">&quot;&gt;timer topic=&quot;&lt;topic-name&gt; &quot;seconds=&quot;0-4294967295</span>
+
+<span class="na">topic-filter   ::</span><span class="o">=</span> <span class="s">*(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot; | &quot;?&quot; | &quot;#&quot; | &quot;*&quot;)</span>
+<span class="na">key-filter     ::</span><span class="o">=</span> <span class="s">*(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot; | &quot;?&quot; | &quot;#&quot; | &quot;*&quot;)</span>
+  <span class="na">?            ::</span><span class="o">=</span> <span class="s">any character (1)</span>
+  <span class="c1">#            ::= 1 or more numerical digits</span>
+  <span class="na">*            ::</span><span class="o">=</span> <span class="s">any characters from this point on</span>
+
+<span class="na">data-filter    ::</span><span class="o">=</span> <span class="s">&lt;OR-pattern&gt;</span>
+  <span class="na">OR-pattern   ::</span><span class="o">=</span> <span class="s">&lt;AND-pattern&gt; *[&quot;|&quot; &lt;AND-pattern&gt;]</span>
+  <span class="na">AND-pattern  ::</span><span class="o">=</span> <span class="s">&lt;string&gt; *[&quot;&amp;&quot; &lt;string&gt;]</span>
+
+<span class="na">topic-name     ::</span><span class="o">=</span> <span class="s">*(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot;)</span>
+<span class="na">phc-cmd        ::</span><span class="o">=</span> <span class="s">refer to the PHC Command Reference</span>
+<span class="na">number         ::</span><span class="o">=</span> <span class="s">*(&quot;0-9&quot;) [&quot;.&quot; *(&quot;0-9&quot;)]</span>
+<span class="na">string         ::</span><span class="o">=</span> <span class="s">*(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.,&quot;&#39;:;{}&quot;)</span>
+<span class="na">days           ::</span><span class="o">=</span> <span class="s">or-ed value of selected days: sun=1,mon=2,tue=4,wed=8,thu=16,fri=32,sat=64</span>
+</code></pre></div>
+<h2 id="internal-objects">Internal Objects<a class="headerlink" href="#internal-objects" title="Permanent link">~</a></h2>
+<p>The SRSD knows a number of internal objects, 
+they do not exist when SRSD starts but must be created/updated at runtime via an <a href="#action-rule">action rule</a> or a <a href="#state_rule">state rule</a>.</p>
+<p>These objects are persistent as long as SRSD is running, when the SRSD stops their values are lost.</p>
+<p>Each internal object has 2 public attributes:<br />
+- topic  : a meaningful string describing the nature of the object<br />
+- value  : the string value of the object</p>
+<p>Each object can be referred by topic in a <a href="#conditions">condition</a> where it's value is compared to a condition-value to determine the flow of actions.</p>
+<p>When a non-existing object is referred in a condition,
+an empty object will be used with default values depending on the object type, see below.</p>
+<h3 id="clock-object">Clock Object<a class="headerlink" href="#clock-object" title="Permanent link">~</a></h3>
+<p>A clock object can be used to perform periodic actions.
+You can specify which days of the week it should be applied and what time to turn on and off the clock</p>
+<p>You can use it in a clock action:
+stop a clock by setting days to 0,
+start a clock by settings days to the or-ed value of each required day and specifying the on and off time:
+<div class="highlight"><pre><span></span><code>then &gt;clock topic=daily days=0
+then &gt;clock topic=daily days=127 onhour=7 onminute=0 offhour=22 offminute=0
+</code></pre></div>
+It will generate an event when it turns on or off:
+<div class="highlight"><pre><span></span><code>when &lt;clock topic=daily data=on
+when &lt;clock topic=daily data=off
+</code></pre></div>
+You can use it in a condition, it's default value="off":
+<div class="highlight"><pre><span></span><code><span class="na">if   &lt;clock topic</span><span class="o">=</span><span class="s">daily oper=eq value=on</span>
+<span class="na">and  &lt;clock topic</span><span class="o">=</span><span class="s">daily oper=ne value=off</span>
+</code></pre></div></p>
+<h3 id="state-object">State Object<a class="headerlink" href="#state-object" title="Permanent link">~</a></h3>
+<p>A state object can be used to store runtime data for later use.</p>
+<p>State objects can be created/updated implicitly with a <a href="#state-rule">state rule</a>.
+<div class="highlight"><pre><span></span><code>state &lt;mqtt topic=tzb/tele/SENSOR data=outside/lumi_nw prefix=lumi keys=Illuminance;
+</code></pre></div></p>
+<p>You can create/update a state object explicitly with a state action:
+<div class="highlight"><pre><span></span><code>then &gt;state topic=weather value=sunny
+then &gt;state topic=temperature value=20.9
+</code></pre></div></p>
+<p>A state object cannot generate any events.</p>
+<p>You can use it in a condition, it's default value="":
+<div class="highlight"><pre><span></span><code><span class="na">if   &lt;state topic</span><span class="o">=</span><span class="s">weather     oper=eq value=sunny</span>
+<span class="na">if   &lt;state topic</span><span class="o">=</span><span class="s">temperature oper=lt value=21.5</span>
+</code></pre></div></p>
+<h3 id="system-object">System Object<a class="headerlink" href="#system-object" title="Permanent link">~</a></h3>
+<p>A system object is always present and cannot be created/updated as such. 
+It is the link between the Phc2Mqtt module with it's sub-systems and SRSD.</p>
+<p>It will generate following predefined events:
+<div class="highlight"><pre><span></span><code>when &lt;system topic=appl data=halting        ; module is going to halt
+when &lt;system topic=appl data=rebooting      ; module is going to reboot
+when &lt;system topic=stmd data=started        ; STM daemon started
+when &lt;system topic=stmd data=stopped        ; STM daemon stopped
+when &lt;system topic=mqtt data=connected      ; MQTT client connected to broker
+when &lt;system topic=mqtt data=disconnected   ; MQTT client disconnected from broker
+</code></pre></div>
+The reason of existence for the system events comes from the startup order of the module's sub-systems. 
+By default the SRSD will be started early during module boot. 
+At that moment other sub-systems are not yet started and thus cannot execute actions from init rules.</p>
+<p>By allowing SRSD to monitor when a given sub-system becomes active, you can take a matching action. 
+For instance, you want to know when the MQTT client is connected to the broker so you can publish an 'online' message.</p>
+<h3 id="timer-object">Timer Object<a class="headerlink" href="#timer-object" title="Permanent link">~</a></h3>
+<p>A timer object can be used to monitor the presence or absence of an event (dead man's switch), it's unit of time is expressed in seconds.</p>
+<p>You can use it in an action:
+stop a timer by setting seconds to 0,
+start it by setting seconds to a non-zero value:
+<div class="highlight"><pre><span></span><code><span class="na">then &gt;timer topic</span><span class="o">=</span><span class="s">watchdog seconds=0</span>
+<span class="na">then &gt;timer topic</span><span class="o">=</span><span class="s">watchdog seconds=60</span>
+</code></pre></div></p>
+<p>It will generate an event when it expires:
+<div class="highlight"><pre><span></span><code><span class="na">when &lt;timer topic</span><span class="o">=</span><span class="s">watchdog data=expired</span>
+</code></pre></div></p>
+<p>You can use it in a condition, it's default value="off":
+<div class="highlight"><pre><span></span><code><span class="na">if   &lt;timer topic</span><span class="o">=</span><span class="s">watchdog oper=eq value=on</span>
+<span class="na">if   &lt;timer topic</span><span class="o">=</span><span class="s">watchdog oper=eq value=off</span>
+</code></pre></div></p>
+<h2 id="events">Events<a class="headerlink" href="#events" title="Permanent link">~</a></h2>
+<p>In general a rule is triggered by an event (unless otherwise stated) 
+which has 2 parts of information that uniquely define the event: topic and data. Each part has it's characteristic formats.</p>
+<h3 id="topic-formats">Topic Formats<a class="headerlink" href="#topic-formats" title="Permanent link">~</a></h3>
+<h4 id="full">Full<a class="headerlink" href="#full" title="Permanent link">~</a></h4>
+<p>Fully identifies the object that generated the event, typically physical module + endpoint/channel:
+<div class="highlight"><pre><span></span><code>topic=sta/omd.0.out0
+</code></pre></div></p>
+<h4 id="partial">Partial<a class="headerlink" href="#partial" title="Permanent link">~</a></h4>
+<p>Partially identifies part of the object that generated the event, typically the physical module:
+<div class="highlight"><pre><span></span><code>topic=sta/omd.0
+</code></pre></div></p>
+<h4 id="general">General<a class="headerlink" href="#general" title="Permanent link">~</a></h4>
+<p>Does not identify the object that generated the event, it is a placeholder for topic-filtering:
+<div class="highlight"><pre><span></span><code>topic=tzb/tele/SENSOR
+</code></pre></div></p>
+<h3 id="data-formats">Data Formats<a class="headerlink" href="#data-formats" title="Permanent link">~</a></h3>
+<h4 id="flat">Flat<a class="headerlink" href="#flat" title="Permanent link">~</a></h4>
+<p>Has no formatting and is typically combined with a full-topic (equals xPhcLogd compatible STMD reporting format):
+<div class="highlight"><pre><span></span><code>flat-format ::= &lt;string&gt; | &lt;number&gt;
+  string    ::= *(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot;)
+  number    ::= integer | floating
+</code></pre></div>
+Examples
+<div class="highlight"><pre><span></span><code>data=outlt1
+data=0
+data=25.9
+</code></pre></div></p>
+<h4 id="json">JSON<a class="headerlink" href="#json" title="Permanent link">~</a></h4>
+<p>Follows the JSON syntax rules, allows multiple endpoints/attributes to be reported in key:value pairs:
+<div class="highlight"><pre><span></span><code>json-format ::= &quot;{&quot; &lt;key&gt; &quot;:&quot; &lt;value&gt; *[&quot;,&quot; &lt;key&gt; &quot;:&quot; &lt;value&gt;] &quot;}&quot;
+  key       ::= &lt;string&gt;
+  value     ::= &lt;string&gt; | &lt;number&gt; | &lt;object&gt; | &lt;array&gt; | &lt;boolean&gt; | &lt;null&gt;
+  string    ::= &quot;&quot;&quot; *(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot;) &quot;&quot;&quot;
+  number    ::= integer | floating
+  object    ::= &quot;{&quot; &lt;key&gt; &quot;:&quot; &lt;value&gt; *[&quot;,&quot; &lt;key&gt; &quot;:&quot; &lt;value&gt;] &quot;}&quot;
+  array     ::= &quot;[&quot; &lt;value&gt; *[&quot;,&quot; &lt;value&gt;] &quot;]&quot;
+  boolean   ::= &quot;false&quot; | &quot;true&quot;
+  null      ::= &quot;null&quot;
+</code></pre></div>
+Examples
+<div class="highlight"><pre><span></span><code>data={&quot;out0&quot;:1,&quot;out1&quot;:1}
+data={&quot;Name&quot;:&quot;living/id3&quot;,&quot;MultiInValue&quot;:1,&quot;Click&quot;:&quot;single&quot;,&quot;Endpoint&quot;:2,&quot;LinkQuality&quot;:107}
+</code></pre></div></p>
+<h4 id="text">Text<a class="headerlink" href="#text" title="Permanent link">~</a></h4>
+<p>Similar to JSON format but without the syntax decoration, allows multiple endpoints/attributes to be reported in key:value pairs:
+<div class="highlight"><pre><span></span><code>text-format ::= &lt;key&gt; [&quot;:&quot;&lt;value&gt;] *[&quot;,&quot;&lt;key&gt; [&quot;:&quot;&lt;value&gt;]]
+  key       ::= &lt;string&gt;
+  value     ::= &lt;string&gt; | &lt;number&gt;
+  string    ::= *(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot;)
+  number    ::= integer | floating
+</code></pre></div>
+Examples
+<div class="highlight"><pre><span></span><code>data=out0:1,out1:1
+</code></pre></div></p>
+<h3 id="event-sources">Event Sources<a class="headerlink" href="#event-sources" title="Permanent link">~</a></h3>
+<p>Events are generated by a source, these can be internal or external to the SRSD as explained here.</p>
+<h4 id="clock-event">Clock Event<a class="headerlink" href="#clock-event" title="Permanent link">~</a></h4>
+<p>Internal source, generating an event when the specified clock turns on or off:
+<div class="highlight"><pre><span></span><code>when &lt;clock topic=daily data=on
+when &lt;clock topic=daily data=off
+</code></pre></div></p>
+<h4 id="http-event">HTTP Event<a class="headerlink" href="#http-event" title="Permanent link">~</a></h4>
+<p>External source, the result of an incoming HTTP request on the module's webserver, 
+topic and data are contained in the HTTP query-string:
+<div class="highlight"><pre><span></span><code>http-request ::= http://&lt;module-ip-address&gt;/srsd?&lt;query-string&gt;
+query-string ::= &lt;topic&gt; [&quot;&amp;&quot;&lt;data&gt;]
+</code></pre></div></p>
+<p><div class="highlight"><pre><span></span><code>when &lt;http topic=ccmd data=imd.0.in0.outlt1
+</code></pre></div>
+The HTTP request that meets above event definition would be:
+<div class="highlight"><pre><span></span><code>http://&lt;module-ip-address&gt;/srsd?ccmd&amp;imd.0.in0.outlt1
+</code></pre></div></p>
+<h4 id="mqtt-event">MQTT Event<a class="headerlink" href="#mqtt-event" title="Permanent link">~</a></h4>
+<p>External source, the result of the MQTT client receiving an incoming publish message that matches any of the configured SRSD RX-topic-prefixes.
+Refer to Configuring Simple Rule Server in the Phc2Mqtt manual:
+<div class="highlight"><pre><span></span><code>when &lt;mqtt topic=tzb/tele/SENSOR data=Click&quot;:&quot;single&amp;Endpoint&quot;:2
+</code></pre></div></p>
+<h4 id="stmd-event">STMD Event<a class="headerlink" href="#stmd-event" title="Permanent link">~</a></h4>
+<p>External source, generated by the STMD reporting function, topic and data format depend on the Reporting Mode:
+<div class="highlight"><pre><span></span><code>when &lt;stmd topic=evt/imd.0.in0 data=outlt1
+when &lt;stmd topic=evt/imd.0 data=in0:outlt1
+when &lt;stmd topic=evt/imd.0 data={&quot;in0&quot;:&quot;outlt1&quot;}
+</code></pre></div></p>
+<h4 id="system-event">System Event<a class="headerlink" href="#system-event" title="Permanent link">~</a></h4>
+<p>External source, will generate predefined events from the Phc2Mqtt module's sub-systems:
+<div class="highlight"><pre><span></span><code>when &lt;system topic=appl data=halting        ; module is going to halt
+when &lt;system topic=appl data=rebooting      ; module is going to reboot
+when &lt;system topic=stmd data=started        ; STM daemon started
+when &lt;system topic=stmd data=stopped        ; STM daemon stopped
+when &lt;system topic=mqtt data=connected      ; MQTT client connected to broker
+when &lt;system topic=mqtt data=disconnected   ; MQTT client disconnected from broker
+</code></pre></div></p>
+<h4 id="timer-event">Timer Event<a class="headerlink" href="#timer-event" title="Permanent link">~</a></h4>
+<p>Internal source, generating an event when the specified timer expires:
+<div class="highlight"><pre><span></span><code>when &lt;timer topic=watchdog data=expired
+</code></pre></div></p>
+<h3 id="event-filtering">Event Filtering<a class="headerlink" href="#event-filtering" title="Permanent link">~</a></h3>
+<p>For every incoming event the SRSD will iterate over the list of state/action-rules in the order they were defined.
+If the topic-filter and optional data-filter match then the rule will be executed, otherwise it will be skipped.</p>
+<h4 id="topic-filters">Topic-filters<a class="headerlink" href="#topic-filters" title="Permanent link">~</a></h4>
+<p>Are used to match the event topic and support wildcard characters:<br />
+- A <b>?</b> means that the character in that position can be any character<br />
+- A <b>#</b> means one or more numeric digits match<br />
+- An <b>*</b> means all following characters are a match<br />
+- All other characters require a 1-on-1 case-sensitive match</p>
+<h4 id="data-filters">Data-filters<a class="headerlink" href="#data-filters" title="Permanent link">~</a></h4>
+<p>Are used to match the event data and are composed from OR- and AND-patterns:<br />
+- All strings in the AND-pattern must be present as-is (case-sensitive) in the event data for the AND-pattern to match<br />
+- You can specify multiple AND-patterns combined in an OR-pattern, as soon as one AND-pattern matches, the data-filter matches</p>
+<h4 id="key-filters">Key-filters<a class="headerlink" href="#key-filters" title="Permanent link">~</a></h4>
+<p>Are used in state-rules to extract key:value pairs from the event data and support wildcard characters:<br />
+- A <b>?</b> means that the character in that position can be any character<br />
+- A <b>#</b> means one or more numeric digits match<br />
+- An <b>*</b> means all following characters are a match<br />
+- All other characters require a 1-on-1 case-sensitive match</p>
+<p>Samples for illustration:
+<div class="highlight"><pre><span></span><code>MQTT-event: tzb/tele/SENSOR = {&quot;Name&quot;:&quot;outside/lumi_nw&quot;,&quot;Illuminance&quot;:24699,&quot;Endpoint&quot;:1}
+rule      : state &lt;mqtt topic=tzb/tele/SENSOR data=Name&quot;:&quot;outside/lumi_nw prefix=lumi keys=Illuminance;
+result    : state-topic=lumi/Illuminance state-value=24699
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>STMD-event: sta/omd.0 = out0:1,out4:0,out7:1
+rule      : state &lt;stmd topic=omd.# keys=out#;
+result    : state-topic=omd.0.out0 state-value=1
+            state-topic=omd.0.out4 state-value=0
+            state-topic=omd.0.out7 state-value=1
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>MQTT-event: tzb/tele/SENSOR = {&quot;Name&quot;:&quot;test/id1&quot;,&quot;MultiInValue&quot;:1,&quot;Click&quot;:&quot;single&quot;,&quot;Endpoint&quot;:1,&quot;LinkQuality&quot;:139}
+rule      : when  &lt;mqtt topic=tzb/tele/SENSOR data=Name&quot;:&quot;test/id1&amp;Click&quot;:&quot;single&amp;Endpoint&quot;:1|Name&quot;:&quot;test/id1&amp;Click&quot;:&quot;single&amp;Endpoint&quot;:2
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>MQTT-event: p2m/evt/imw.8 = in0:ingt0
+MQTT-event: p2m/evt/imw.8 = in1:ingt0
+rule      : when  &lt;mqtt topic=p2m/evt/imw.8   data=in0:ingt0|in1:ingt0
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>MQTT-event: test/parent.2/child.0  = value0:1
+MQTT-event: test/parent.31/child.0 = value0:1
+rule      : when  &lt;mqtt topic=test/parent.#/child.0 data=value0:1
+</code></pre></div></p>
+<h2 id="conditions">Conditions<a class="headerlink" href="#conditions" title="Permanent link">~</a></h2>
+<p>In addition to event filtering we can add one or more conditions to an action rule to determine a specific flow of actions
+in an <strong>if</strong>/<strong>then</strong>/<strong>elif</strong>/<strong>else</strong> scheme, where each condition compares an internal object's value to a predefined value.</p>
+<p>When a condition refers a non-existing internal object, SRSD will use a temporary object with a default value. 
+Refer to <a href="#internal-objects">Internal Objects</a> for default values for each type of object.</p>
+<p>A condition compares the referred object's value with the condition-value using an operator,
+when both values are a number (integer or floating) they will be compared numerical otherwise as text.</p>
+<p>The result of a condition will always be <strong>true</strong> or <strong>false</strong>, when multiple conditions are present then the
+result of each condition is AND-ed:
+<div class="highlight"><pre><span></span><code>object    : &gt;state topic=weather value=rainy
+condition : if  &lt;state topic=weather oper=eq value=sunny
+result    : false
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>object    : &gt;state topic=weather value=rainy
+condition : if  &lt;state topic=weather oper=lt value=sunny
+result    : true
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>object    : &gt;state topic=weather value=rainy
+condition : if  &lt;state topic=weather oper=lt value=sunny
+            and &lt;state topic=weather oper=eq value=rainday
+result    : false
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>object    : &gt;state topic=temperature value=25.0
+condition : if  &lt;state topic=temperature oper=eq value=25
+result    : true
+</code></pre></div>
+Initially <strong>if</strong> and <strong>and</strong> conditions can be specified and when evaluating to <strong>true</strong> 
+SRSD will execute all following <strong>then</strong> actions after which the rule ends:
+<div class="highlight"><pre><span></span><code>when &lt;event&gt;
+if &lt;cond&gt;
+  *[and &lt;cond&gt;]
+    *(then &lt;action&gt;)
+</code></pre></div>
+Additional <strong>elif</strong> and <strong>and</strong> conditions can be specified, again when evaluating to <strong>true</strong> 
+SRSD will execute all followng <strong>then</strong> actions after which the rule ends:
+<div class="highlight"><pre><span></span><code>*[elif &lt;cond&gt;
+  *[and &lt;cond&gt;]
+    *(then &lt;action&gt;)]
+</code></pre></div>
+When all previous conditions were not met then SRSD will execute all <strong>else</strong> actions, if present:
+<div class="highlight"><pre><span></span><code>*[else &lt;action&gt;]
+</code></pre></div></p>
+<h2 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">~</a></h2>
+<h3 id="init-rule">Init Rule<a class="headerlink" href="#init-rule" title="Permanent link">~</a></h3>
+<p>When the SRSD starts it will execute all init rules without the need for an event to trigger the rule.</p>
+<p>An init rule executes any action but be aware that not all actions may execute as the targeted sub-system may not yet be active.</p>
+<p>When the Phc2Mqtt module boots, the different sub-systems will start each in turn. Typically STMD first, then SRSD, Wifi, HTTP server and MQTT client.
+In this case it will not be possible to send an MQTT message in an init rule. Checkout the <a href="#system-event">system events</a> to handle this problem.</p>
+<p>Ofcourse SRSD can also be started manually from the configuration page, at that moment the rest of the module is fully operational and
+it will be possible to send an MQTT message.</p>
+<div class="highlight"><pre><span></span><code>init  &gt;state topic=alias/sta/daynight value=day;
+init  &gt;mqtt  topic=alias/sta/srsd     data=online;
+init  &gt;stmd  ccmd=imw.0.led4.blink;omd.0.out0.on;
+init  &gt;timer topic=watchdog           seconds=60;
+init  &gt;clock topic=daily              days=127 onhour=7 onminute=0 offhour=22 offminute-0;
+</code></pre></div>
+<h3 id="exit-rule">Exit Rule<a class="headerlink" href="#exit-rule" title="Permanent link">~</a></h3>
+<p>When the SRSD stops it will execute all exit rules without the need for an event to trigger the rule.</p>
+<p>An exit rule executes any action but note that some actions make no sense (state/timer/clock) as the SRSD will stop any activity.
+<div class="highlight"><pre><span></span><code>exit  &gt;state topic=alias/sta/daynight value=none;
+exit  &gt;mqtt  topic=alias/sta/srsd     data=offline;
+exit  &gt;stmd  ccmd=imw.0.led4.off;omd.0.out0.off
+exit  &gt;timer topic=watchdog           seconds=0;
+exit  &gt;clock topic=daily              days=0;
+</code></pre></div></p>
+<h3 id="state-rule">State Rule<a class="headerlink" href="#state-rule" title="Permanent link">~</a></h3>
+<p>State rules are triggered by incoming events when matching the topic-filter and optional data-filter.</p>
+<p>Their purpose is to extract information from the event topic/data and store that into one or more state objects for later reference.</p>
+<p>This is a complex operation because the event topic/data are highly variable with respect to content and format.</p>
+<h4 id="etopic">etopic<a class="headerlink" href="#etopic" title="Permanent link">~</a></h4>
+<p>An event with a full topic typically has flat data associated with it, 
+to handle this we define a state rule with &lt;modifier&gt;=etopic and no <b>keys</b> parameter.</p>
+<p>The resulting state object's topic will be equal to the event's topic, and a value equal to the event's data.
+This rule format covers the xPhcLogd compatible STMD reporting format.</p>
+<p>Examples:
+<div class="highlight"><pre><span></span><code>event       : topic=sta/omd.0.out0 data=1
+rule        : state &lt;stmd topic=sta/omd.0.out0 etopic;
+state-object: topic=sta/omd.0.out0 value=1
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>event       : topic=evt/imd.0.in0 data=outlt1
+rule        : state &lt;stmd topic=evt/imd.0.in0 etopic;
+state-object: topic=evt/imd.0.in0 value=outlt1
+</code></pre></div></p>
+<h4 id="the-rest">the rest<a class="headerlink" href="#the-rest" title="Permanent link">~</a></h4>
+<p>All other events with a partial or general topic will typically have text or JSON formated data with key/value pairs,
+the SRSD will parse them as follows.</p>
+<p>Text format data:
+The event data is first split into key/value pairs with a comma as separator, then split into key and value with a colon as separator:
+<div class="highlight"><pre><span></span><code>Event data : out0:1,out1:0,out2:0,out3:0,out4:0,out5:1,out6:0,out7:0
+Parsed as  : key=out0 value=1
+             key=out1 value=0
+             key=out2 value=0
+             key=out3 value=0
+             key=out4 value=0
+             key=out5 value=1
+             key=out6 value=0
+             key=out7 value=0
+</code></pre></div>
+JSON format data:
+The event data is parsed following the JSON specification:
+<div class="highlight"><pre><span></span><code>Event data : {&quot;Device&quot;:&quot;0x73C9&quot;,&quot;Name&quot;:&quot;outside/lumi_nw&quot;,&quot;Illuminance&quot;:24699,&quot;Endpoint&quot;:1}
+Parsed as  : key=Device      value=0x73C9
+             key=Name        value=outside/lumi_nw
+             key=Illuminance value=24699
+             key=Endpoint    value=1
+</code></pre></div>
+For each parsed key present in the <strong>keys</strong> parameter, SRSD will create/update a state object to store the key's value.</p>
+<p>The state object topic is determined by the specified &lt;modifier&gt;:
+<div class="highlight"><pre><span></span><code>if (no &lt;modifier&gt;)
+  object-topic = &lt;topic&gt;/&lt;key&gt;
+if (&lt;modifier&gt; == infix)
+  object-topic = &lt;topic&gt;/&lt;infix&gt;/&lt;key&gt;
+if (&lt;modifier&gt; == prefix)
+  object-topic = &lt;prefix&gt;/&lt;key&gt;
+if (&lt;modifier&gt; == name)
+  object-topic = &lt;name&gt;
+</code></pre></div></p>
+<p>Examples:
+<div class="highlight"><pre><span></span><code>event       : topic=sta/omd.0 data=out0:1,out4:0,out7:1
+rule        : state &lt;stmd topic=sta/omd.0 keys=out#;
+state-object: topic=sta/omd.0.out0 value=1
+              topic=sta/omd.0.out4 value=0
+              topic=sta/omd.0.out7 value=1
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>event       : topic=tzb/tele/SENSOR data={&quot;Device&quot;:&quot;0x73C9&quot;,&quot;Name&quot;:&quot;outside/lumi_nw&quot;,&quot;Illuminance&quot;:24699,&quot;Endpoint&quot;:1}
+rule        : state &lt;mqtt topic=tzb/tele/SENSOR data=outside/lumi_nw infix=lumi keys=Illuminance;
+state-object: topic=tzb/tele/SENSOR/lumi/Illuminance value=24699
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>event       : topic=tzb/tele/SENSOR data={&quot;Device&quot;:&quot;0x73C9&quot;,&quot;Name&quot;:&quot;outside/lumi_nw&quot;,&quot;Illuminance&quot;:24699,&quot;Endpoint&quot;:1}
+rule        : state &lt;mqtt topic=tzb/tele/SENSOR data=outside/lumi_nw prefix=lumi keys=Illuminance,Endpoint;
+state-object: topic=lumi/Illuminance value=24699
+              topic=lumi/Endpoint value=1
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>event       : topic=sta/omd.0 data=out0:1
+rule        : state &lt;stmd topic=sta/omd.0 data=out0 keys=out0 name=bathroom/light;
+state-object: topic=bathroom/light value=1
+</code></pre></div></p>
+<h3 id="action-rule">Action Rule<a class="headerlink" href="#action-rule" title="Permanent link">~</a></h3>
+<p>Action rules are triggered by an incoming event when matching the topic-filter and optional data-filter, 
+see <a href="#event-filtering">event filtering</a> for details.</p>
+<p>Additional <a href="#conditions">conditions</a> may be defined that determine the flow of actions executed.</p>
+<h4 id="clock-action">Clock Action<a class="headerlink" href="#clock-action" title="Permanent link">~</a></h4>
+<p>Stop a clock by setting days to 0, start it by setting days to the or-ed value of each required day and specifying the on and off time:
+<div class="highlight"><pre><span></span><code>then &gt;clock topic=daily days=0
+then &gt;clock topic=daily days=127 onhour=7 onminute=0 offhour=22 offminute=0
+</code></pre></div></p>
+<h4 id="mqtt-action">MQTT Action<a class="headerlink" href="#mqtt-action" title="Permanent link">~</a></h4>
+<p>Send an MQTT publish message via the module's MQTT client, with the specified topic and data.
+<div class="highlight"><pre><span></span><code>then &gt;mqtt  topic=tzb/cmnd/ZbSend data={&quot;device&quot;:&quot;office/od4&quot;,&quot;send&quot;:{&quot;power&quot;:&quot;toggle&quot;}};
+then &gt;mqtt  topic=m2p/cmd/ccmd data=omd.0.out0.toggle;omd.4.out7.toggle
+</code></pre></div></p>
+<h4 id="stmd-action">STMD Action<a class="headerlink" href="#stmd-action" title="Permanent link">~</a></h4>
+<p>Send a list of phc-cmd's (ccmd) to the module's STMD sub-system, which will handle the commands depending on it's Operating Mode.
+<div class="highlight"><pre><span></span><code>then &gt;stmd   ccmd=jrm.1.out0.stop.0;jrm.1.out0.delayedup.0.0.5.150;
+</code></pre></div></p>
+<h4 id="state-action">State Action<a class="headerlink" href="#state-action" title="Permanent link">~</a></h4>
+<p>Explicitly create or update an internal state-object.
+<div class="highlight"><pre><span></span><code>then &gt;state topic=weather value=sunny
+then &gt;state topic=temperature value=21.6
+</code></pre></div></p>
+<h4 id="timer-action">Timer Action<a class="headerlink" href="#timer-action" title="Permanent link">~</a></h4>
+<p>Stop a timer by setting seconds to 0, start it by setting seconds to a non-zero value:
+<div class="highlight"><pre><span></span><code>then &gt;timer topic=watchdog seconds=0
+then &gt;timer topic=watchdog seconds=60
+</code></pre></div></p>
+<h2 id="rule-samples">Rule Samples<a class="headerlink" href="#rule-samples" title="Permanent link">~</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>These sample rules expect the <a href="../phc2mqtt/#configure-stmd-reporting">STMD Reporting</a> Format to be 'xPhcLogd compatible'.</p>
+</div>
+<p>Simple controlling one or more outputs with one or more buttons:
+<div class="highlight"><pre><span></span><code>; clicking on a PHC button will trigger
+when  &lt;stmd topic=evt/imw.13.in4 data=outlt1
+
+; or clicking on an Aqara Opple 3 band Zigbee button
+when  &lt;mqtt topic=tzb/tele/SENSOR data=&quot;Name&quot;:&quot;aqara/inputs&quot;&amp;&quot;Click&quot;:&quot;single&quot;&amp;&quot;Endpoint&quot;:4
+
+; toggle a PHC output
+then  &gt;stmd ccmd=omd.4.out0.toggle
+
+; toggle an IKEA Zigbee outlet
+then  &gt;mqtt topic=tzb/cmnd/ZbSend data={&quot;device&quot;:&quot;ikea/outlet&quot;,&quot;send&quot;:{&quot;power&quot;:&quot;toggle&quot;}};
+</code></pre></div></p>
+<p>Controlling a PHC shutter with 2 PHC buttons:
+<div class="highlight"><pre><span></span><code>; stop the shutter
+when  &lt;stmd topic=evt/imw.11.in0 data=ingt0
+when  &lt;stmd topic=evt/imw.11.in1 data=ingt0
+then  &gt;stmd ccmd=jrm.5.out2.stop.0;
+
+; lower the shutter 15 seconds then lift 2 seconds to give some openings
+when  &lt;stmd topic=evt/imw.11.in0 data=ingt1
+then  &gt;stmd ccmd=jrm.5.out2.delayeddowntip.0.0.1.150.20;
+
+; raise the shutter 15 seconds all the way up
+when  &lt;stmd topic=evt/imw.11.in1 data=ingt1
+then  &gt;stmd ccmd=jrm.5.out2.up.0.0.150;
+</code></pre></div></p>
+<p>Using a Zigbee temperature/humidity sensor to drive a bathroom ventilator:
+<div class="highlight"><pre><span></span><code>; initialise the fan state
+init  &gt;state topic=bathroon/fan value=off;
+
+state &lt;mqtt topic=tzb/tele/SENSOR data=bathroon/sensor prefix=bathroon/sensor keys=Temperature,Humidity;
+
+; let new humidity reading trigger the rule
+when  &lt;mqtt topic=tzb/tele/SENSOR data=bathroon/sensor&amp;Humidity&quot;:
+
+; when off, check for more than 75% humidity to turn fan on
+if    &lt;state topic=bathroon/fan oper=eq value=off
+and   &lt;state topic=bathroon/sensor/Humidity oper=gt value=75
+then  &gt;state topic=bathroon/fan value=on
+then  &gt;stmd  ccmd=omd.2.out5.on
+
+; when on, check for less than 70% humidity to turn fan off
+elif  &lt;state topic=bathroon/fan oper=eq value=on
+and   &lt;state topic=bathroon/sensor/Humidity oper=lt value=70
+then  &gt;state topic=bathroon/fan value=off
+then  &gt;stmd  ccmd=omd.2.out5.off;
+</code></pre></div></p>
+<p>Automatic night lights with a Zigbee light sensor:
+<div class="highlight"><pre><span></span><code>; initialise to night as the sensor will send updates during day
+init  &gt;state topic=daynight value=night;
+
+; extract the illuminance value into a state object
+state &lt;mqtt  topic=tzb/tele/SENSOR data=outside/lumi_nw prefix=outside keys=Illuminance;
+
+; check each update coming in from the sensor
+when  &lt;mqtt  topic=tzb/tele/SENSOR data=outside/lumi_nw&amp;Illuminance&quot;:
+
+; going from day to night -&gt; turn on lights
+if    &lt;state topic=daynight oper=eq value=day
+and   &lt;state topic=outside/Illuminance oper=lt value=5000
+then  &gt;state topic=daynight value=night
+then  &gt;stmd  ccmd=omd.0.out4.on;omd.4.out2.on
+
+; going from night to day -&gt; turn off lights
+elif  &lt;state topic=daynight oper=eq value=night
+and   &lt;state topic=outside/Illuminance oper=gt value=5500
+then  &gt;state topic=daynight value=day
+then  &gt;stmd  ccmd=omd.0.out4.off;omd.4.out2.off;
+</code></pre></div></p>
+<p>Sample how to step through a series of state values pressing a button:
+<div class="highlight"><pre><span></span><code>; set initial color
+init  &gt;state topic=mycolor value=white;
+
+; each time you press/release a button
+when  &lt;stmd  topic=evt/imw.8.in0 data=outlt1
+
+if    &lt;state topic=mycolor oper=eq value=white
+then  &gt;state topic=mycolor value=blue
+
+elif  &lt;state topic=mycolor oper=eq value=blue
+then  &gt;state topic=mycolor value=green
+
+elif  &lt;state topic=mycolor oper=eq value=green
+then  &gt;state topic=mycolor value=cyan
+
+elif  &lt;state topic=mycolor oper=eq value=cyan
+then  &gt;state topic=mycolor value=red
+
+elif  &lt;state topic=mycolor oper=eq value=red
+then  &gt;state topic=mycolor value=purple
+
+elif  &lt;state topic=mycolor oper=eq value=purple
+then  &gt;state topic=mycolor value=yellow
+
+elif  &lt;state topic=mycolor oper=eq value=yellow
+then  &gt;state topic=mycolor value=white
+
+else  &gt;state topic=mycolor value=white;
+</code></pre></div></p>
+
+              
+            </article>
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../PhcModules/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Phc Modules" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Phc Modules
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../Upgrading/" class="md-footer__link md-footer__link--next" aria-label="Next: Upgrading" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Upgrading
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.top", "navigation.tracking"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.649a939e.min.js"></script>
+      
+    
+  </body>
+</html>
