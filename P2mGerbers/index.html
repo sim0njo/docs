@@ -6,25 +6,25 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for Phc2Mqtt">
+        <meta name="description" content="P2M Gerbers">
       
       
       
-        <link rel="canonical" href="https://sim0njo.github.io/phc2mqtt/phc/et1-8/">
+        <link rel="canonical" href="https://sim0njo.github.io/phc2mqtt/P2mGerbers/">
       
-      <link rel="icon" href="../../img/favicon.ico">
+      <link rel="icon" href="../img/favicon.ico">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.2">
     
     
       
-        <title>Et1 8 - Jo Simons</title>
+        <title>PCB Production Info - Jo Simons</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f7951f6f.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f7951f6f.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
         
       
     
@@ -38,7 +38,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -65,6 +65,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#producing-pcbs" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -77,9 +82,9 @@
 
 <header class="md-header md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Jo Simons" class="md-header__button md-logo" aria-label="Jo Simons" data-md-component="logo">
+    <a href=".." title="Jo Simons" class="md-header__button md-logo" aria-label="Jo Simons" data-md-component="logo">
       
-  <img src="../../img/home.gif" alt="logo">
+  <img src="../img/home.gif" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -95,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Et1 8
+              PCB Production Info
             
           </span>
         </div>
@@ -171,13 +176,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../Phc2Mqtt/" class="md-tabs__link">
+      <a href="../Phc2Mqtt/" class="md-tabs__link md-tabs__link--active">
         Phc2Mqtt
       </a>
     </li>
@@ -190,7 +197,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="../../Downloads/" class="md-tabs__link">
+    <a href="../Downloads/" class="md-tabs__link">
       Downloads
     </a>
   </li>
@@ -235,9 +242,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Jo Simons" class="md-nav__button md-logo" aria-label="Jo Simons" data-md-component="logo">
+    <a href=".." title="Jo Simons" class="md-nav__button md-logo" aria-label="Jo Simons" data-md-component="logo">
       
-  <img src="../../img/home.gif" alt="logo">
+  <img src="../img/home.gif" alt="logo">
 
     </a>
     Jo Simons
@@ -251,12 +258,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
       
       
       
@@ -279,7 +288,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Phc2Mqtt/" class="md-nav__link">
+      <a href="../Phc2Mqtt/" class="md-nav__link">
         User Manual
       </a>
     </li>
@@ -293,7 +302,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../PhcModules/" class="md-nav__link">
+      <a href="../PhcModules/" class="md-nav__link">
         Phc Modules
       </a>
     </li>
@@ -307,7 +316,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../SimpleRuleServer/" class="md-nav__link">
+      <a href="../SimpleRuleServer/" class="md-nav__link">
         Simple Rule Server
       </a>
     </li>
@@ -319,11 +328,55 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../P2mGerbers/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          PCB Production Info
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         PCB Production Info
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#producing-pcbs" class="md-nav__link">
+    Producing PCB's
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gerber-files" class="md-nav__link">
+    Gerber Files
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -343,7 +396,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Downloads/" class="md-nav__link">
+      <a href="../Downloads/" class="md-nav__link">
         Downloads
       </a>
     </li>
@@ -372,45 +425,80 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#producing-pcbs" class="md-nav__link">
+    Producing PCB's
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gerber-files" class="md-nav__link">
+    Gerber Files
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
 
-  <h1>Et1 8</h1>
+  <h1>PCB Production Info</h1>
 
-<div class="highlight"><pre><span></span><code>;
-; Generic template for et1-8 modules
-;
-module  id=et1-8.&lt;addr&gt;
-channel id=in0 desc=in0 events=ingt0,outlt1,ingt1,outgt1,ingt2,out
-channel id=in1 desc=in1 events=ingt0,outlt1,ingt1,outgt1,ingt2,out
-channel id=in2 desc=in2 events=ingt0,outlt1,ingt1,outgt1,ingt2,out
-channel id=in3 desc=in3 events=ingt0,outlt1,ingt1,outgt1,ingt2,out
-channel id=in4 desc=in4 events=ingt0,outlt1,ingt1,outgt1,ingt2,out
-channel id=in5 desc=in5 events=ingt0,outlt1,ingt1,outgt1,ingt2,out
-channel id=in6 desc=in6 events=ingt0,outlt1,ingt1,outgt1,ingt2,out
-channel id=in7 desc=in7 events=ingt0,outlt1,ingt1,outgt1,ingt2,out
-channel id=led0 desc=led0
-channel id=led1 desc=led1
-channel id=led2 desc=led2
-channel id=led3 desc=led3
-channel id=led4 desc=led4
-channel id=led5 desc=led5
-channel id=led6 desc=led6
-channel id=led7 desc=led7
-channel id=led8 desc=led8
-channel id=fb0 desc=fb0 events=on,off,blink
-channel id=fb1 desc=fb1 events=on,off,blink
-channel id=fb2 desc=fb2 events=on,off,blink
-channel id=fb3 desc=fb3 events=on,off,blink
-channel id=fb4 desc=fb4 events=on,off,blink
-channel id=fb5 desc=fb5 events=on,off,blink
-channel id=fb6 desc=fb6 events=on,off,blink
-channel id=fb7 desc=fb7 events=on,off,blink
-channel id=fb8 desc=fb8 events=on,off,blink;
-</code></pre></div>
+<h2 id="producing-pcbs">Producing PCB's<a class="headerlink" href="#producing-pcbs" title="Permanent link">~</a></h2>
+<p>Below ZIP archive contains all gerber files needed to produce the printed circuit boards (PCB) at most Asian manufacturers:<br />
+- [JLCPCB}()
+- <a href="">Seeed Studio</a></p>
+<p>Simply go to their website and look for the order menu.</p>
+<p>You will be presented with a webpage that allows you to upload the ZIP archive (upload gerber files). 
+Once uploaded they will inspect it to be valid for production and offer you the chance to view it.</p>
+<p>After that choose the desired finish:<br />
+- base material: FR-4<br />
+- layers: 2<br />
+- dimensions should be set when uploading the ZIP archive<br />
+- quantity: mostly 5 or 10 pcs will be very cheap<br />
+- different design: 1<br />
+- delivery format: single PCB<br />
+- thickness: 1.6mm<br />
+- color: of your choice<br />
+- silkscreen: normally white<br />
+- surface finish: HASL (with or without lead will be small price diff) is use with lead for easier soldering<br />
+- outer copper weight: 1 oz<br />
+- gold fingers: no<br />
+- confirm production file: yes<br />
+- flying probe test: fully<br />
+- castellated holes: no<br />
+- remove order number: no</p>
+<h2 id="gerber-files">Gerber Files<a class="headerlink" href="#gerber-files" title="Permanent link">~</a></h2>
+<ul>
+<li><a href="http://sim0njo.github.io/install/gerbers/e32Phc2Mqtt-v1.3.zip">Phc2Mqtt PCB v1.3</a></li>
+</ul>
 
               
             </article>
@@ -425,6 +513,41 @@ channel id=fb8 desc=fb8 events=on,off,blink;
       </main>
       
         <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../SimpleRuleServer/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Simple Rule Server" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Simple Rule Server
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../Downloads/" class="md-footer__link md-footer__link--next" aria-label="Next: Downloads" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Downloads
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -446,10 +569,10 @@ channel id=fb8 desc=fb8 events=on,off,blink;
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.top", "navigation.tracking"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.top", "navigation.tracking"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
     
     
-      <script src="../../assets/javascripts/bundle.649a939e.min.js"></script>
+      <script src="../assets/javascripts/bundle.649a939e.min.js"></script>
       
     
   </body>
