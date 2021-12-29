@@ -618,17 +618,15 @@ and send commands to the real STM that will handle protocol details for communic
 <p>A space character is used to separate fields and can thus not be used as data.</p>
 <p>Keywords and delimiters (between double quotes) are case-insensitive, actual data strings are case-sensitive.</p>
 <div class="highlight"><pre><span></span><code>config         ::= &quot;&lt;stmd&gt;&quot;
-                   *[&lt;project&gt; | &lt;module&gt; | &lt;comment&gt;]
+                   *[&lt;module&gt; | &lt;comment&gt;]
                    &quot;&lt;/stmd&gt;&quot;
 
 comment        ::= &quot;;&quot; [&lt;string&gt;]
 
-project        ::= &quot;project&quot; &quot;name=&quot;&lt;string&gt; [&quot;author=&quot;&lt;string&gt;] &quot;;&quot;
-
-module         ::= &quot;module&quot; &quot;id=&quot;&lt;mod&gt;.&lt;address&gt;
+module         ::= &quot;module&quot; &quot;id=&quot;&lt;phy-mod&gt;.&lt;address&gt;
                      *(&quot;channel&quot; &lt;channel&gt;) &quot;;&quot;
 
-  mod          ::= physical module name
+  phy-mod      ::= physical module name
   address      ::= 0-31
 
 channel        ::= &quot;id=&quot;&lt;id&gt; &quot;desc=&quot;&lt;string&gt; [&quot;events=&quot;&lt;event&gt; *[&quot;,&quot;&lt;event&gt;]
