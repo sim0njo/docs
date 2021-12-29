@@ -1229,23 +1229,23 @@ then  &gt;stmd ccmd=jrm.5.out2.up.0.0.150;
 </code></pre></div></p>
 <p>Using a Zigbee temperature/humidity sensor to drive a bathroom ventilator:
 <div class="highlight"><pre><span></span><code>; initialise the fan state
-init  &gt;state topic=bathroon/fan value=off;
+init  &gt;state topic=bathroom/fan value=off;
 
-state &lt;mqtt topic=tzb/tele/SENSOR data=bathroon/sensor prefix=bathroon/sensor keys=Temperature,Humidity;
+state &lt;mqtt topic=tzb/tele/SENSOR data=bathroom/sensor prefix=bathroom/sensor keys=Temperature,Humidity;
 
 ; let new humidity reading trigger the rule
-when  &lt;mqtt topic=tzb/tele/SENSOR data=bathroon/sensor&amp;Humidity&quot;:
+when  &lt;mqtt topic=tzb/tele/SENSOR data=bathroom/sensor&amp;Humidity&quot;:
 
 ; when off, check for more than 75% humidity to turn fan on
-if    &lt;state topic=bathroon/fan oper=eq value=off
-and   &lt;state topic=bathroon/sensor/Humidity oper=gt value=75
-then  &gt;state topic=bathroon/fan value=on
+if    &lt;state topic=bathroom/fan oper=eq value=off
+and   &lt;state topic=bathroom/sensor/Humidity oper=gt value=75
+then  &gt;state topic=bathroom/fan value=on
 then  &gt;stmd  ccmd=omd.2.out5.on
 
 ; when on, check for less than 70% humidity to turn fan off
-elif  &lt;state topic=bathroon/fan oper=eq value=on
-and   &lt;state topic=bathroon/sensor/Humidity oper=lt value=70
-then  &gt;state topic=bathroon/fan value=off
+elif  &lt;state topic=bathroom/fan oper=eq value=on
+and   &lt;state topic=bathroom/sensor/Humidity oper=lt value=70
+then  &gt;state topic=bathroom/fan value=off
 then  &gt;stmd  ccmd=omd.2.out5.off;
 </code></pre></div></p>
 <p>Automatic night lights with a Zigbee light sensor:
