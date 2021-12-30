@@ -366,16 +366,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-information-syntax" class="md-nav__link">
-    Project Information Syntax
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-syntax" class="md-nav__link">
+    Configuration Syntax
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#module-templates" class="md-nav__link">
     Module Templates
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -511,16 +524,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-information-syntax" class="md-nav__link">
-    Project Information Syntax
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-syntax" class="md-nav__link">
+    Configuration Syntax
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#module-templates" class="md-nav__link">
     Module Templates
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -612,9 +638,18 @@ and send commands to the real STM that will handle protocol details for communic
 <p>Output channels (mrk/led/out) can optionally specify following info:<br />
 - Channel identification<br />
 - A description of this channel</p>
-<h2 id="project-information-syntax">Project Information Syntax<a class="headerlink" href="#project-information-syntax" title="Permanent link">~</a></h2>
-<p>Project info can span 1 or more lines but the last line always ends on a semicolon (;).</p>
-<p>Each line in project info carries 1 functional block as shown in the Backus-Naur format below, the split over lines is intentional and strict.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">~</a></h2>
+<p>The module and optional channel/event list can be provided in several ways:
+- by uploading the project definition from the System Software v3 to Phc2Mqtt via the management interface
+- by extracting project.ppfx from the project.zpfx file and then uploading it manual</p>
+<p>In future we will obsolete both these methods and replace it with a full manual solution, this may sound strange but it will 
+allow for a lot of functionality on the module to be removed and a significant reduction is required memory (64Kb Flash + 64Kb RAM).</p>
+<p>To provide the manual configuration you will need to prepare a text file with below syntax and then upload it to Phc2Mqtt.
+To avoid typing errors we will make use of prepared template files per module type that can be copy/pasted with minor adjustements.</p>
+<p>For Proxy mode you need to copy the module definition, for PassiveSTMv3 mode you need to copy the module and channel definitions.</p>
+<h3 id="configuration-syntax">Configuration Syntax<a class="headerlink" href="#configuration-syntax" title="Permanent link">~</a></h3>
+<p>Configuration info can span 1 or more lines but the last line always ends on a semicolon (;).</p>
+<p>Each line in the configuration carries 1 functional block as shown in the Backus-Naur format below, the split over lines is intentional and strict.</p>
 <p>A space character is used to separate fields and can thus not be used as data.</p>
 <p>Keywords and delimiters (between double quotes) are case-insensitive, actual data strings are case-sensitive.</p>
 <div class="highlight"><pre><span></span><code>config         ::= &quot;&lt;stmd&gt;&quot;
@@ -637,10 +672,10 @@ channel        ::= &quot;id=&quot;&lt;id&gt; &quot;desc=&quot;&lt;string&gt; [&q
 
 string         ::= *(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.,&quot;&#39;:;{}&quot;)
 </code></pre></div>
-<h2 id="module-templates">Module Templates<a class="headerlink" href="#module-templates" title="Permanent link">~</a></h2>
-<p>Building the project info file from scratch is a difficult task, therefore we created templates for each physical module type.</p>
+<h3 id="module-templates">Module Templates<a class="headerlink" href="#module-templates" title="Permanent link">~</a></h3>
+<p>Building the configuration file from scratch is a difficult task, therefore we created templates for each physical module type.</p>
 <p>Below table lists all modules, their physical and logical module types, their image and manual and the corresponding template file.</p>
-<p>Copy the template for each module you have into your project.stm file and make adjustments:<br />
+<p>Copy the template for each module you have into your config.stm file and make adjustments:<br />
 - adjust the <addr> of the module<br />
 - put all not used channels in comment<br />
 - optional adjust the desc field of each channel
@@ -1004,14 +1039,6 @@ string         ::= *(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot
 </tr>
 </tbody>
 </table>
-<p>The module and optional channel/event list can be provided in several ways:
-- by uploading the project definition from the System Software v3 to Phc2Mqtt via the management interface
-- by extracting project.ppfx from the project.zpfx file and then uploading it manual</p>
-<p>In future we will obsolete both these methods and replace it with a full manual solution, this may sound strange but it will 
-allow for a lot of functionality on the module to be removed and a significant reduction is required memory (64Kb Flash + 64Kb RAM).</p>
-<p>To provide the manual configuration you will need to prepare a text file with below syntax and then upload it to Phc2Mqtt.
-To avoid typing errors we will make use of prepared template files per module type that can be copy/pasted with minor adjustements.</p>
-<p>For Proxy mode you need to copy the module definition, for PassiveSTMv3 mode you need to copy the module and channel definitions.</p>
 
               
             </article>
