@@ -867,10 +867,12 @@ It is the link between the Phc2Mqtt module with it's sub-systems and SRSD.</p>
 <p>It will generate following predefined events:
 <div class="highlight"><pre><span></span><code>when &lt;system topic=appl data=halting        ; module is going to halt
 when &lt;system topic=appl data=rebooting      ; module is going to reboot
+when &lt;system topic=mqtc data=connected      ; MQTT client connected to broker
+when &lt;system topic=mqtc data=disconnected   ; MQTT client disconnected from broker
 when &lt;system topic=stmd data=started        ; STM daemon started
 when &lt;system topic=stmd data=stopped        ; STM daemon stopped
-when &lt;system topic=mqtt data=connected      ; MQTT client connected to broker
-when &lt;system topic=mqtt data=disconnected   ; MQTT client disconnected from broker
+when &lt;system topic=wifi data=connected      ; Wifi client connected to AP
+when &lt;system topic=wifi data=disconnected   ; Wifi client disconnected from AP
 </code></pre></div>
 The reason of existence for the system events comes from the startup order of the module's sub-systems. 
 By default the SRSD will be started early during module boot. 
@@ -1101,7 +1103,7 @@ exit  &gt;clock topic=daily              days=0;
 <p>This is a complex operation because the event topic/data are highly variable with respect to content and format.</p>
 <h4 id="etopic">etopic<a class="headerlink" href="#etopic" title="Permanent link">~</a></h4>
 <p>An event with a full topic typically has flat data associated with it, 
-to handle this we define a state rule with &lt;modifier&gt;=etopic and no <b>keys</b> parameter.</p>
+to handle this we define a state rule with a &lt;topic-filter&gt; and &lt;modifier&gt;=etopic but without &lt;data-filter&gt; or &lt;keys&gt; parameters.</p>
 <p>The resulting state object's topic will be equal to the event's topic, and a value equal to the event's data.
 This rule format covers the xPhcLogd compatible STMD reporting format.</p>
 <p>Examples:
