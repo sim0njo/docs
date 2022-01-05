@@ -996,10 +996,10 @@ when &lt;system topic=mqtt data=disconnected   ; MQTT client disconnected from b
 If the topic-filter and optional data-filter match then the rule will be executed, otherwise it will be skipped.</p>
 <h4 id="topic-filters">Topic-filters<a class="headerlink" href="#topic-filters" title="Permanent link">~</a></h4>
 <p>Are used to match the event topic and support wildcard characters:<br />
-- A <b>?</b> means that the character in that position can be any character<br />
-- A <b>#</b> means one or more numeric digits match<br />
-- An <b>*</b> means all following characters are a match<br />
-- All other characters require a 1-on-1 case-sensitive match</p>
+- A question-mark (<strong>?</strong>) means that the character in that position can be any character<br />
+- A hashtag (<strong>#</strong>) means one or more numeric digits match<br />
+- An asterisk (<strong>*</strong>) means all following characters are a match<br />
+- All other characters (<strong>0-9</strong>,<strong>a-z</strong>,<strong>A-Z</strong>, <strong>_-.;</strong>) require a 1-on-1 case-sensitive match</p>
 <h4 id="data-filters">Data-filters<a class="headerlink" href="#data-filters" title="Permanent link">~</a></h4>
 <p>Are used to match the event data and are composed from OR- and AND-patterns:<br />
 - All strings in the AND-pattern must be present as-is (case-sensitive) in the event data for the AND-pattern to match<br />
