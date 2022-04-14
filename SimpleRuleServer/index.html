@@ -910,15 +910,16 @@ data=25.9
 </code></pre></div></p>
 <h4 id="json">JSON<a class="headerlink" href="#json" title="Permanent link">~</a></h4>
 <p>Follows the JSON syntax rules, allows multiple endpoints/attributes to be reported in key:value pairs:
-<div class="highlight"><pre><span></span><code>json-format ::= &quot;{&quot; &lt;key&gt; &quot;:&quot; &lt;value&gt; *[&quot;,&quot; &lt;key&gt; &quot;:&quot; &lt;value&gt;] &quot;}&quot;
-  key       ::= &lt;string&gt;
-  value     ::= &lt;string&gt; | &lt;number&gt; | &lt;object&gt; | &lt;array&gt; | &lt;boolean&gt; | &lt;null&gt;
-  string    ::= &quot;&quot;&quot; *(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot;) &quot;&quot;&quot;
-  number    ::= integer | floating
-  object    ::= &quot;{&quot; &lt;key&gt; &quot;:&quot; &lt;value&gt; *[&quot;,&quot; &lt;key&gt; &quot;:&quot; &lt;value&gt;] &quot;}&quot;
-  array     ::= &quot;[&quot; &lt;value&gt; *[&quot;,&quot; &lt;value&gt;] &quot;]&quot;
-  boolean   ::= &quot;false&quot; | &quot;true&quot;
-  null      ::= &quot;null&quot;
+<div class="highlight"><pre><span></span><code>json-format    ::= { &lt;key-name&gt; : &lt;key-value&gt; *[, &lt;key-name&gt; : &lt;key-value&gt;] }
+  key-name     ::= &lt;string&gt;
+  key-value    ::= &lt;string&gt; | &lt;number&gt; | &lt;object&gt; | &lt;array&gt; | &lt;boolean&gt; | &lt;null&gt;
+  string       ::= &lt;double-quote&gt; *(a-z A-Z 0-9 _-/.) &lt;double-quote&gt;
+  number       ::= integer | floating
+  object       ::= { &lt;key&gt; : &lt;value&gt; *[, &lt;key&gt; : &lt;value&gt;] }
+  array        ::= [ &lt;value&gt; *[, &lt;value&gt;] ]
+  boolean      ::= false | true
+  null         ::= null
+  double-quote ::= &quot;
 </code></pre></div>
 Examples
 <div class="highlight"><pre><span></span><code>data={&quot;out0&quot;:1,&quot;out1&quot;:1}
@@ -926,10 +927,10 @@ data={&quot;Name&quot;:&quot;living/id3&quot;,&quot;MultiInValue&quot;:1,&quot;C
 </code></pre></div></p>
 <h4 id="text">Text<a class="headerlink" href="#text" title="Permanent link">~</a></h4>
 <p>Similar to JSON format but without the syntax decoration, allows multiple endpoints/attributes to be reported in key:value pairs:
-<div class="highlight"><pre><span></span><code>text-format ::= &lt;key&gt; [&quot;:&quot;&lt;value&gt;] *[&quot;,&quot;&lt;key&gt; [&quot;:&quot;&lt;value&gt;]]
-  key       ::= &lt;string&gt;
-  value     ::= &lt;string&gt; | &lt;number&gt;
-  string    ::= *(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot;)
+<div class="highlight"><pre><span></span><code>text-format ::= &lt;key-name&gt; [ : &lt;key-value&gt;] *[ , &lt;key-name&gt; [ : &lt;key-value&gt;]]
+  key-name  ::= &lt;string&gt;
+  key-value ::= &lt;string&gt; | &lt;number&gt;
+  string    ::= *(a-z A-Z 0-9 _-/.)
   number    ::= integer | floating
 </code></pre></div>
 Examples
@@ -1084,21 +1085,21 @@ exit  &gt;timer topic=watchdog           seconds=0;
 exit  &gt;clock topic=daily              days=0;
 </code></pre></div></p>
 <h3 id="state-rule">State Rule<a class="headerlink" href="#state-rule" title="Permanent link">~</a></h3>
-<p>State rules are triggered by incoming events when matching the topic-filter and optional data-filter.</p>
+<p>State rules are triggered by incoming events when matching the <b>topic-filter</b> and optional <b>data-filter</b>.</p>
 <p>Their purpose is to extract information from the event topic/data and store that into one or more state objects for later reference.</p>
 <p>This is a complex operation because the event topic/data are highly variable with respect to content and format.</p>
 <p>To accomplish this you can use the &lt;modifier&gt; and &lt;keys&gt; parameters, depending on their combination the resulting state objects
 will have a different name and value as specified in below table:
-<div class="highlight"><pre><span></span><code>modifier | keys | state-obj-name        | state-obj-value
----------+------+-----------------------+-----------------
--        | -    | &lt;topic&gt;               | &lt;data&gt;
--        | x    | &lt;topic&gt;/&lt;key&gt;         | &lt;key-value&gt;
-infix    | -    | &lt;topic&gt;/&lt;infix&gt;       | &lt;data&gt;
-infix    | x    | &lt;topic&gt;/&lt;infix&gt;/&lt;key&gt; | &lt;key-value&gt;
-prefix   | -    | &lt;prefix&gt;              | &lt;data&gt;
-prefix   | x    | &lt;prefix&gt;/&lt;key&gt;        | &lt;key-value&gt;
-name     | -    | &lt;name&gt;                | &lt;data&gt;
-name     | x    | &lt;name&gt;                | &lt;key-value&gt;
+<div class="highlight"><pre><span></span><code>modifier | keys | state-obj-name             | state-obj-value
+---------+------+----------------------------+-----------------
+-        | -    | &lt;topic&gt;                    | &lt;data&gt;
+-        | x    | &lt;topic&gt;/&lt;key-name&gt;         | &lt;key-value&gt;
+infix    | -    | &lt;topic&gt;/&lt;infix&gt;            | &lt;data&gt;
+infix    | x    | &lt;topic&gt;/&lt;infix&gt;/&lt;key-name&gt; | &lt;key-value&gt;
+prefix   | -    | &lt;prefix&gt;                   | &lt;data&gt;
+prefix   | x    | &lt;prefix&gt;/&lt;key-name&gt;        | &lt;key-value&gt;
+name     | -    | &lt;name&gt;                     | &lt;data&gt;
+name     | x    | &lt;name&gt;                     | &lt;key-value&gt;
 </code></pre></div></p>
 <h4 id="etopic">etopic<a class="headerlink" href="#etopic" title="Permanent link">~</a></h4>
 <p>An event with a full topic typically has flat data associated with it, 
