@@ -900,7 +900,7 @@ which has 2 parts of information that uniquely define the event: topic and data.
 <h4 id="flat">Flat<a class="headerlink" href="#flat" title="Permanent link">~</a></h4>
 <p>Has no formatting and is typically combined with a full-topic (equals xPhcLogd compatible STMD reporting format):
 <div class="highlight"><pre><span></span><code>flat-format ::= &lt;string&gt; | &lt;number&gt;
-  string    ::= *(&quot;a-z&quot; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot;)
+  string    ::= *(&lt;b&gt;&quot;a-z&quot;&lt;/b&gt; | &quot;A-Z&quot; | &quot;0-9&quot; | &quot;_-/.&quot;)
   number    ::= integer | floating
 </code></pre></div>
 Examples
@@ -1087,6 +1087,19 @@ exit  &gt;clock topic=daily              days=0;
 <p>State rules are triggered by incoming events when matching the topic-filter and optional data-filter.</p>
 <p>Their purpose is to extract information from the event topic/data and store that into one or more state objects for later reference.</p>
 <p>This is a complex operation because the event topic/data are highly variable with respect to content and format.</p>
+<p>To accomplish this you can use the &lt;modifier&gt; and &lt;keys&gt; parameters, depending on their combination the resulting state objects
+will have a different name and value as specified in below table:
+<div class="highlight"><pre><span></span><code>modifier | keys | state-obj-name        | state-obj-value
+---------+------+-----------------------+-----------------
+-        | -    | &lt;topic&gt;               | &lt;data&gt;
+-        | x    | &lt;topic&gt;/&lt;key&gt;         | &lt;key-value&gt;
+infix    | -    | &lt;topic&gt;/&lt;infix&gt;       | &lt;data&gt;
+infix    | x    | &lt;topic&gt;/&lt;infix&gt;/&lt;key&gt; | &lt;key-value&gt;
+prefix   | -    | &lt;prefix&gt;              | &lt;data&gt;
+prefix   | x    | &lt;prefix&gt;/&lt;key&gt;        | &lt;key-value&gt;
+name     | -    | &lt;name&gt;                | &lt;data&gt;
+name     | x    | &lt;name&gt;                | &lt;key-value&gt;
+</code></pre></div></p>
 <h4 id="etopic">etopic<a class="headerlink" href="#etopic" title="Permanent link">~</a></h4>
 <p>An event with a full topic typically has flat data associated with it, 
 to handle this we define a state rule with a &lt;topic-filter&gt; and &lt;modifier&gt;=etopic but without &lt;data-filter&gt; or &lt;keys&gt; parameters.</p>
