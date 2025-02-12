@@ -79,7 +79,7 @@ action         ::= <clock-action> | <mqtt-action> | <stmd-action> | <state-actio
   clock-action ::= 'clock:{' 'topic:'<string> 'days:'<days> 
                            ['on:"' <0-23>:<0-59> '"' 'off:"' <0-23>:<0-59> '"'] '}'
     days       ::= sum of selected days: sun=1,mon=2,tue=4,wed=8,thu=16,fri=32,sat=64
-  mqtt-action  ::= 'mqtt:{'  'topic:'<string> 'data:'<string> '}'
+  mqtt-action  ::= 'mqtt:{'  'topic:'<string> 'data:'<string> 'retain:'<0|1> '}'
   stmd-action  ::= 'stmd:{'  'ccmd:'<phc-cmd> *[';'<phc-cmd>] '}'
   state-action ::= 'state:{' 'topic:'<string> 'value:'(<string>|<number>) '}'
   timer-action ::= 'timer:{' 'topic:'<string> 'seconds:'0-4294967295 '}'
@@ -426,6 +426,7 @@ With this action you can send an MQTT publish message via the module's MQTT clie
 then:{mqtt:{topic:tzb/cmnd/ZbSend data:"{\"device\":\"office/od4\",\"send\":{\"power\":\"toggle\"}}"}}
 then:{mqtt:{topic:m2p/cmd/ccmd data:"omd.0.out0.toggle;omd.4.out7.toggle"}}
 then:{mqtt:{topic:m2p/cmd/ccmd data:omd.0.out0.ontimed.30}}
+then {mqtt:{topic:p2m/sta/omd.0.out0 data:1 retain:1}}
 ```
 
 ### STMD Action

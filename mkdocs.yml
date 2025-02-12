@@ -57,7 +57,8 @@ markdown_extensions:
 
 nav:
   - Phc2Mqtt:
-    - User Manual: Phc2Mqtt.md
+    - User Manual v4.x.y.z: Phc2Mqtt.md
+    - User Manual v5.x.y.z: Phc2MqttV5.md
     - Phc Modules: PhcModules.md
     - Simple Rule Server: SimpleRuleServer.md
 #   - PCB Production Info: P2mGerbers.md
