@@ -17,9 +17,10 @@ description: Phc2Mqtt v5.x.y.z
 | MQTT | A compact telemetry protocol typically used in IoT applications, runs over TCP
 | PHC | PEHA Home Control domotic system  
 | STM | STeering Module, the central processor in a PHC system
-| System Software | THe Windows application to configure and program your PHC system  
+| System Software | The PEHA Windows application to configure and program your PHC system  
 | PCB | Printed Circuit Board, a non-conductive material with copper patterns on 1 or 2 sides to interconnect electronic components
 | ESP32 DevkitC | The ESP32 dual core module that is used for Phc2Mqtt, we use the WROVER version with 4Mb/8Mb flash memory and 4Mb PSRAM
+| LilyGo T-ETH Lite | The ESP32 dual code module with ethernet that is used on PCB v3.x, with WROVER
 | P2M | The combination of the hardware and software that make up the functionality of Phc2Mqtt
 | Sub-system | A functional part of P2M that performs a certain task and is under supervision of P2M
 | NVS | Non-volatile storage, a part of memory that stores data and settings permanently, even when power fails
@@ -27,6 +28,7 @@ description: Phc2Mqtt v5.x.y.z
 | Oper State | Operational state (stopped/started), this is the actual running state of a sub-system. A sub-system will be stopped when booting P2M, if the admin state is enable, then the sub-system will be started and the oper-state will become started  
 | AP-mode | Access Point mode, the Phc2Mqtt module acts as an access point to which you can connect with a Wifi enabled PC or Smart Phone
 | STA-mode |Station mode, the Phc2Mqtt module connects to a Wifi AP as a station, you can access P2M via the WLAN network
+| ETH-mode | Ethernet mode, the Phc2Mqtt module connects via an ethernet link to the network
 | OTA-update | Over-The-Air, refers to firmware upgrade by simple file upload, as such you don't need to open P2M or use specialized hardware
 | Serial-update | Refers to firmware upgrade via a USB port, this requires connecting a USB cable to P2M
 
@@ -127,7 +129,7 @@ It still fits in a 3MOD DIN-rail housing. If the housing has a red transparent t
     P2M is configured by default to power from the internal power supply, 
     if you want to power it via USB you need to remove the cap from the PWR connector first (top/center on main PCB).
 
-###Version 2.2/2.3
+###Version 2.2/2.3 (jul-2022)
 This version has a single mainboard that contains the ESP32-DevkitC, it's form maximalizes the board space available
 while fitting in a custom 3D printed 2MOD DIN-rail housing.
 
@@ -148,7 +150,7 @@ It draws power from the PHC power supply by means of a DC/DC convertor and the R
 &nbsp;  
 &nbsp;  
 &nbsp;  
-###Version 3.1
+###Version 3.1 (jan-2025)
 This version has a single mainboard that contains the LilyGo T-ETH Lite board supporting Ethernet and Wifi, it's form maximalizes the board space available
 while fitting in a custom 3D printed 2MOD DIN-rail housing.
 
@@ -401,7 +403,10 @@ Click on a button to enter the related configuration page.
 
 ###Configure Module
 
-<img style="float:right;width:352px;height:350px" src="../img/p2m-config-modu.jpg"></img>
+<img style="float:right;width:352px;height:405px" src="../img/p2m-config-modu.jpg"></img>
+
+- **Device Name**: Max 31 characters. Defaults to 'p2m_xxxxxx' (where xxxxxx is part of the MAC address), this name will be used throughout
+P2M for things as SSID in case of AP network mode and in HA advertising.  
 
 - **Web Admin Password**: Max 31 characters. You can specify a password to protect web access to P2M, in this case you need to logon to P2M
 when prompted by the browser, the username is &#39;admin&#39; completed with the specified password.  
@@ -428,7 +433,7 @@ But you can choose whatever you want.
 
 - **Preferred Network Mode**: Here you can select the preferred mode of network connectivity AP/STA/ETH.  
 
-AP mode: P2M will be a standalone access point with SSID 'p2m_xxxxxx'. You can connect to it with a Wifi enabled PC.  
+AP mode: P2M will be a standalone access point with SSID set to the Module Device Name. You can connect to it with a Wifi enabled PC.  
 
 STA mode: P2M will connect to a remote access point and will be available to the whole network. If no Remote AP SSID is specified, P2M will fallback to AP mode.  
 
@@ -455,6 +460,28 @@ P2M will boot in AP-mode and turn the red module LED on to indicate this, after 
 and access it on 192.168.4.1 with a web browser without password.
 Change the Wifi settings to the correct values, save them and reboot P2M to revert to normal STA-mode operation.  
 
+###Configure Logging
+P2M has extensive logging features that enable you to monitor module behaviour, but also to give you support in case of problems.
+
+Some of them generate serious overhead so they must remain inactive as much as possible and should only be set when asked by support team.
+
+To provide the usable and necessary feedback to the user we suggest below settings:
+
+<img style="float:right;width:352px;height:408px" src="../img/p2m-config-logr.jpg"></img>
+
+- **Serial Loglevel**: Set to '0 None' for normal operation, serial logging is sent over the USB connection of the ESP32 DevkitC.  
+
+- **Web Loglevel**: Should be set to '2 Info' for normal operation,
+this logging can be observed in the [Web Console](#web-console).  
+
+- **Syslog Loglevel**: Set to '0 None' for normal operation.  
+
+- **Syslog IP Address/Syslog IP Port**: In case syslog logging is needed,
+fill out the IP address and port (default 514) of the target syslog deamon.  
+
+- **Save**: Press this button to save settings, Serial Loglevel, Web Loglevel and Syslog Loglevel changes will have immediate effect,
+the other settings require a module [reboot](#reboot) to let changes take effect.
+
 ###Configure MQTT Client
 The MQTT client is the interface to the MQTT broker (server), when enabled
 it will connect to the broker and provide a send/receive path to P2M for receiving commands
@@ -475,42 +502,17 @@ it is upto them to determine whether to use the message or not.
 
 - **User/Password**: Optional, max 31 characters. If needed to connect to the broker.  
 
-- **LWT Topic/Msg/Qos/Retain**: Optional, Last Will and Testament configuration  
+- **Keepalive Period**: Default 30s. P2M will send a ping msg every Keepalive Period seconds, this to indicate that it is still
+alive and functioning. Can range from 15 to 3600 seconds.
+
+- **LWT Topic/Msg/Qos/Retain**: Optional, Last Will and Testament configuration. When P2M crashes or looses connection to the MQTT Broker, 
+the broker will send out this message. Note however that the Broker will not notice this until it tries to send a message to P2M or until
+the Keepalive Period expires.
 
 - **Admin State**: Specifies the desired state of the MQTT client after P2M reboot, this does not immediately change the operational state.  
 
 - **Save**: Press this button to save settings, [reboot](#reboot) P2M to let changes take effect.
 
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-
-
-###Configure Logging
-P2M has extensive logging features that enable you to monitor module behaviour, but also to give you support in case of problems.
-
-Some of them generate serious overhead so they must remain inactive as much as possible and should only be set when asked by support team.
-
-To provide the usable and necessary feedback to the user we suggest below settings:
-
-<img style="float:right;width:352px;height:408px" src="../img/p2m-config-logr.jpg"></img>
-
-- **Serial Loglevel**: Set to '0 None' for normal operation, serial logging is sent over the USB connection of the ESP32 DevkitC.  
-
-- **Web Loglevel**: Should be set to '2 Info' for normal operation,
-this logging can be observed in the [Web Console](#web-console).  
-
-- **Syslog Loglevel**: Set to '0 None' for normal operation.  
-
-- **Syslog IP Address** and <b>Syslog IP Port</b>: In case syslog logging is needed,
-fill out the IP address and port (default 514) of the target syslog daemon.  
-
-- **Save**: Press this button to save settings, Serial Loglevel, Web Loglevel and Syslog Loglevel changes will have immediate effect,
-the other settings require a module [reboot](#reboot) to let changes take effect.
 
 ###Configure Simple Rule Server
 The [Simple Rule Server](../SimpleRuleServer) manual gives a detailed explanation of the SRS daemon (SRSD),
@@ -584,8 +586,8 @@ the port depends on the settings of the convertor which must be in TCP server mo
 - **Save**: Press this button to save settings, changes take effect after rebooting P2M.
 
 
-###Configure STM Daemon
-The STM Daemon (STMD) is the heart of P2M which coordinates activities to/from the PHC system,
+###Configure STM Deamon
+The STM Deamon (STMD) is the heart of P2M which coordinates activities to/from the PHC system,
 it relies on project configuration data received via the [PHC Management Interface](#phc-management-interface).
 
 This project config data is stored in 2 files:  
@@ -604,6 +606,10 @@ enter P2M's IP address, press TAB and you should notice that version 3.30 is rep
 
 Goto the transfer window of the Systemsoftware and press <b>Start</b>, the project data will be transfered to P2M, you can observe this in the <b>Web Console</b>.
 
+The STMD will automatically extract project.ppfx after transferring the project data
+with the Systemsoftware, and will rebuild P2M-list by parsing project.ppfx. It will also generate data describing your PHC 
+system that can be sent out via MQTT so Home Assistant (HA) can discover it (experimental).
+
 &nbsp;
 
 <img style="float:right;width:352px;height:489px" src="../img/p2m-config-stmd-v5.jpg"></img>
@@ -616,17 +622,6 @@ it also relays commands coming in from MQTT client to the real (remote) STM in y
 'PassiveSTMv3': The STMD replaces the real STM of your PHC system, it is the master of the PHC module bus and communicates directly with
 the PHC modules. Commands coming in from MQTT client will be executed, events coming from PHC modules are only reported to MQTT client/SRS daemon.  
 
-
-- **Configuration**: Selects how P2M will handle incoming project data via the PHC Management Interface
-
-'Manual upload & validate new configuration': You will need to upload project.ppfx yourself (see below), this is intended as backup in case the first option fails.
-
-'Generate from transferred project': The STMD will automatically extract project.ppfx after transferring the project data with the
-Systemsoftware, and will rebuild P2M-list by parsing project.ppfx.
-
-'Generate from transferred project + HA data': The STMD will automatically extract project.ppfx after transferring the project data
-with the Systemsoftware, and will rebuild P2M-list by parsing project.ppfx. It will also generate data describing your PHC 
-system that can be sent out via MQTT so Home Assistant (HA) can discover it (experimental).
 
 - **Module-List**:
 
@@ -650,34 +645,6 @@ Address 0x00-0x1F : imd
 - **Save**: Press this button to save settings, [reboot](#reboot) P2M to let changes take effect.  
 
 - **Download Config**: Here you can download the generated configuration file for reference.  
-
-
-###Configure STM HA Discovery
-Home Assistant (HA) is a leading automation integrator and we are trying to provide an easy way to advertise the capabilities of your
-PHC system to HA. This is done by publishing selected components/channels via MQTT to a certain topic.  
-
-Channels you want to advertise to Home Assistant need to have the 'Visualize' checkmark set in the Systemsoftware v3.
-
-<img style="float:right;width:352px;height:400px" src="../img/p2m-config-ha-disco-v5.jpg"></img>
-
-- **Discovery Topic Prefix**: The prefix of the topic to which to publish MQTT messages.  
-
-- **Discovery Mode**: Here you select how to advertise the selected channels.  
-
-Individual Components: In this mode each channel is advertised in itself.
-
-Device Components: In this mode each channel is advertised as a subdevice of an encapsulating PHC device.
-
-- **Discovery Interval**: The rate at which to publish advertise messages.  
-
-- **Discovery Retain**: Enable/disable the retain flag in the MQTT messages.  
-
-- **Save**: Press this button to save settings.  
-
-- **Discover Now**: Press this button to publish P2M capabilities to HA.
-  This functionality is still experimental at this moment and reports only available modules/channels. New development is ongoing.
-
-
 
 
 ###Configure STM Reporting
@@ -754,6 +721,34 @@ topic=cmd/omd.0 data={out3:ontimed.300}
 To see the differences you can later on observe them in the [Web Console](#web-console).  
 
 
+###Configure STM HA Discovery
+Home Assistant (HA) is a leading automation integrator and we are trying to provide an easy way to advertise the capabilities of your
+PHC system to HA. This is done by publishing selected components/channels via MQTT to a certain topic.  
+
+Channels you want to advertise to Home Assistant need to have the 'Visualize' checkmark set in the Systemsoftware v3.
+
+<img style="float:right;width:352px;height:400px" src="../img/p2m-config-ha-disco-v5.jpg"></img>
+
+- **Discovery Topic Prefix**: The prefix of the topic to which to publish MQTT messages.  
+
+- **Discovery Mode**: Here you select how to advertise the selected channels.  
+
+Component: In this mode each channel is advertised in itself.
+
+Device: In this mode each channel is advertised as a subdevice of an encapsulating PHC device identified as Module Device Name.
+
+- **Discovery Interval**: The rate at which to publish advertise messages.  
+
+- **Discovery Retain**: Enable/disable the retain flag in the MQTT messages.  
+
+- **Save**: Press this button to save settings.  
+
+- **Advertise Now**: Press this button to publish P2M capabilities to HA.
+  This functionality is still experimental at this moment and reports only available modules/channels. New development is ongoing.
+
+
+
+
 ###PHC Cmd Reference
 
 By clicking on a hyperlink in this page you will get a list of commands applicable to the clicked item in the text area below.
@@ -762,7 +757,7 @@ By clicking on a hyperlink in this page you will get a list of commands applicab
 Commands related to input (in%/ir%/im%/il%) and feedback (fb%) channels are not available in PassiveSTMv3 mode as the STMD
 does not handle them.
 
-These commands can be executed by publishing an MQTT message to topic '<rx-topic-prefix>/cmd/ccmd' where the data part contains the commands.
+These commands can be executed by publishing an MQTT message to '&lt;rx-topic-prefix&gt;/cmd/ccmd' where the data part contains the commands.
 These commands can also be executed by entering them in the Web Console command line.
 
 <p align="center">
@@ -864,10 +859,11 @@ mqtc                report MQTT client extra settings and statistics
 mqtc txque          set MQTT client tx-que size
 mqtc txbuf          set MQTT client tx-buffer size
 mqtc rxbuf          set MQTT client rx-buffer size
-srsd                report SRS daemon settings and statistics
+srsd                report SRS deamon settings and statistics
 srsd state          report SRS deamon state variables
-ha                  <todo>
-ha advertise        advertise components to Home Assistant
+stmd                report STM deamon settings and statistics
+stmd state          report STM deamon state data
+stmd advertise      advertise PHC components via MQTT to Home Assistant
 ```
 .
 ```
