@@ -725,7 +725,8 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 Home Assistant (HA) is a leading automation integrator and we are trying to provide an easy way to advertise the capabilities of your
 PHC system to HA. This is done by publishing selected components/channels via MQTT to a certain topic.  
 
-Channels you want to advertise to Home Assistant need to have the 'Visualize' checkmark set in the Systemsoftware v3.
+Channels you want to advertise to Home Assistant need to have the 'Visualize' checkmark set in the Systemsoftware v3, in Configure STM HA Discovery 
+you will need to select Reporting Format = 'xPhcLogd compatible', and Data Format = 'Binary'.
 
 <img style="float:right;width:352px;height:400px" src="../img/p2m-config-ha-disco-v5.jpg"></img>
 
