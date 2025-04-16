@@ -51,11 +51,9 @@ exit-rule      ::= 'exit:{' *<action> '}'
 
 state-rule     ::= 'state:{' 
                      'when:{' *<event> '}' 
-                    ['refine:{' [<modifier>':'<string>]['keys:'<key-filters>]['math:'<term>] '}']
+                    ['refine:{' [<modifier>':'<string>]['keys:'<key-filters>]['math:'*(<oper><number>)] '}']
                    '}'
   modifier     ::= 'infix' | 'prefix' | 'name'
-  term         ::= <oper> (<number> | <term>)
-  oper         ::= '+-*/%&|^'
 
 action-rule    ::= 'action:{'
                      'when:{' *<event> '}' 'then:{' *<action> '}' 
@@ -82,6 +80,7 @@ action         ::= <clock-action> | <mqtt-action> | <stmd-action> | <state-actio
   mqtt-action  ::= 'mqtt:{'  'topic:'<string> 'data:'<string> 'retain:'<0|1> '}'
   stmd-action  ::= 'stmd:{'  'ccmd:'<phc-cmd> *[';'<phc-cmd>] '}'
   state-action ::= 'state:{' 'topic:'<string> 'value:'(<string>|<number>) '}'
+               ::= 'state:{' 'topic:'<string> 'math:'*(<oper><number>) '}'
   timer-action ::= 'timer:{' 'topic:'<string> 'seconds:'0-4294967295 '}'
 
 key-filters    ::= <key-filter> *[','<key-filter>]
@@ -96,6 +95,7 @@ data-filter    ::= <OR-pattern>
   AND-pattern  ::= <string> *['&' <string>]
 
 phc-cmd        ::= refer to the PHC Command Reference
+oper           ::= '+-*/%&|^'
 number         ::= ['-+'] *'0-9' [ '.' *'0-9']
 string         ::= ['"'] *<any-character> ['"']
 ```
