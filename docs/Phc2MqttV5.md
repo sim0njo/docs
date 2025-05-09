@@ -7,6 +7,11 @@ description: Phc2Mqtt v5.x.y.z
     You have to be willing to research and solve potential problems yourself. 
     The author has no liability, you can use this software at your own risk.
 
+!!! warning 
+    When upgrading Phc2Mqtt v4.x.y.z to v5.x.y.z, you cannot use the OTA upgrade method (uploading via Firmware Upgrade) as a different bootloader is required.
+    You need to use 'ESP Web Installer' and select the 'erase' option before flashing the module,  
+    this will completely erase the ESP32 and rewrite the correct bootloader, partition map and firmware image. 
+
 ##Abbreviations
 | Term                  | Description                            
 |-----------------------|----------------------------------------
