@@ -727,11 +727,8 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 
 
 ###Configure STM HA Discovery
-Home Assistant (HA) is a leading automation integrator and we are trying to provide an easy way to advertise the capabilities of your
-PHC system to HA. This is done by publishing selected components/channels via MQTT to a certain topic.  
 
-Channels you want to advertise to Home Assistant need to have the 'Visualize' checkmark set in the Systemsoftware v3, in Configure STM HA Discovery 
-you will need to select Reporting Format = 'xPhcLogd compatible', and Data Format = 'Binary'.
+
 
 <img style="float:right;width:352px;height:400px" src="../img/p2m-config-ha-disco-v5.jpg"></img>
 
@@ -739,9 +736,9 @@ you will need to select Reporting Format = 'xPhcLogd compatible', and Data Forma
 
 - **Discovery Mode**: Here you select how to advertise the selected channels.  
 
-Component: In this mode each channel is advertised in itself.
-
 Device: In this mode each channel is advertised as a subdevice of an encapsulating PHC device identified as Module Device Name.
+
+Component: In this mode each channel is advertised in itself.
 
 - **Discovery Interval**: The rate at which to publish advertise messages.  
 
@@ -750,7 +747,7 @@ Device: In this mode each channel is advertised as a subdevice of an encapsulati
 - **Save**: Press this button to save settings.  
 
 - **Advertise Now**: Press this button to publish P2M capabilities to HA.
-  This functionality is still experimental at this moment and reports only available modules/channels. New development is ongoing.
+  Refer to [Advertising to Home Assistant](#advertising-to-home-assistant) for detailed explanation.
 
 
 
@@ -821,6 +818,118 @@ When confirmed P2M will stop the different sub-systems in an orderly fashion and
 After a few seconds the webpage will be redirected to P2M's homepage.
 
 ##Additional Info
+
+###Advertising to Home Assistant
+Home Assistant (HA) is a leading automation integrator and we are trying to provide an easy way to advertise the capabilities of your
+PHC system to HA. This is done by publishing selected channels via MQTT to the HA discovery topic.
+
+**Which channels can be advertised?**  
+Actually any input and output channel.
+
+**How to enable this?**
+
+- PHC Systemsoftware 3.x.y -> PHC Components -> Module -> Channel: check the 'Visualize' box and provide a meaningful description in 'Description' for each channel you want to advertise.
+- PHC Systemsoftware 3.x.y -> Transfer Project: press the Start button to transfer the project to P2M which will generate advertising data.
+- P2M Main Menu -> Configure -> Configure STM Reporting: set Reporting Format to 'xPhcLogd compatible' and Data Format to 'Binary'.
+- P2M Main Menu -> Configure -> Configure STM HA Advertising: select 'device' or 'component' mode and press 'Advertise Now'.
+
+**What is advertised?**  
+Per channel a number of methods and/or properties are advertised, each of these have default values that can be overridden by modifying the channel's 'Description'
+in the PHC Systemsoftware 3.x.y, as explained further on.
+
+Methods are used by HA to control the channel (i.e. on/off) while properties are used by HA to report the channel in it's dashboard(s).
+
+
+**How will channels be advertised?**
+
+***Input Channels***  
+Are advertised as 'binary_sensor' component, they report their state as 'on' or 'off' and are represented with an icon (device_class), all depending on input type.
+
+Properties:
+
+- icon: overrides the default HA <a href="https://www.home-assistant.io/integrations/binary_sensor/#device-class">'device_class'</a> for the channel
+
+Defaults per channel type:
+
+- in%: uses device_class 'none' as icon, events 'ingt0'/'ingt1'/'ingt2' show as 'on', events 'outlt1'/'outgt1'/'out' show as 'off'
+
+- il%: uses device_class 'light' as icon, event 'dark' shows as 'off', event 'bright' shows as 'on'
+
+- im%: uses device_class 'motion' as icon, event 'stop' shows as 'off', event 'start' shows as 'on'
+
+- ir%: not supported for now
+
+If you want a different icon to be used then you need to modify the channel 'Description' in PHC Systemsoftware 3.x.y into a JSON formatted string like this:
+
+  {"desc":"&lt;description>","&lt;property>":"&lt;value>"}
+
+
+For instance, when an input represents the open/close state of a door you could change the icon to a door as follows:
+
+  {"desc":"Front Door","icon":"door"}
+
+
+
+***Output Channels***  
+Are advertised as different component types (light/cover/...), have support methods (on/off,up/down/stop,...) to control the channel, and report their state, all depending on output type.
+
+Each method has a default PHC-cmd linked to it as listed per output type.
+If you want to link a different PHC-cmd then you need to modify the channel 'Description' in PHC Systemsoftware 3.x.y into a JSON formatted string like this:
+
+  {"desc":"&lt;description>","&lt;method>":"&lt;PHC-cmd>"}
+  
+Make sure the &lt;PHC-cmd> provided is valid for the respective module type as there is no validation done, refer to [PHC Cmd Reference](#phc-cmd-reference).
+
+
+- **Output modules output** (i.e. omd.0.out0): 
+
+Are advertised as 'light' component and support following methods:  
+-- '**on**': maps to PHC-cmd 'on' (results in omd.0.out0.on)  
+-- '**off**': maps to PHC-cmd 'off' (results in omd.0.out0.off)
+  
+Suppose you have a stairway and want to turn the light on for 60 seconds instead of permanent then change the channel description to:
+
+  {"desc":"Stairway Light","on":"ontimed.60"}
+
+
+- **Shutter modules output** (i.e. jrm.0.out0): 
+
+Are advertised as 'cover' component and support following methods:  
+-- '**up**': maps to PHC-cmd 'delayedup.0.0.0.150' (prio=0,lock=0,delay=0,run=15s)  
+-- '**down**': maps to PHC-cmd 'delayeddowntip.0.0.0.150.20' (prio=0,lock=0,delay=0,run=15s,tip=2s)  
+-- '**stop**': maps to PHC-cmd 'stop.0' (prio=0)
+
+Suppose you have a shutter in your living room that takes 20 seconds to open/close and requires 3 seconds tip time, then change the channel description to:
+
+  {"desc":"Livingroom Shutter","up":"delayedup.0.0.0.200","down":"delayeddowntip.0.0.0.200.30"}
+
+
+- **Input modules LED** (i.e. imd.0.led0):
+
+Are advertised as 'light' component and support following methods:  
+-- '**on**': maps to PHC-ccmd 'on' (results in imd.0.led0.on)  
+-- '**off**': maps to PHC-ccmd 'off' (results in imd.0.led0.off)
+  
+Suppose you want to use a blinking led to report an alarm (provided the channel supports this command), then change the channel description to:
+
+  {"desc":"Alarm Indication","on":"blink"}
+  
+
+- **Input modules merker** (i.e. imw.0.mrk0):
+
+Are advertised as 'light' component and support following methods:  
+-- '**set**': maps to PHC-ccmd 'set' (results in imw.0.mrk0.set)  
+-- '**reset**': maps to PHC-ccmd 'set' (results in imw.0.mrk0.reset)
+  
+Suppose you want to turn a merker on for 25 seconds instead of permanent then change the channel description to:
+
+  {"desc":"Some Merker","set":"settimed.25"}
+
+  
+- **Dimmer modules output/level** (i.e. dim.0.out0 or dim.0.lvl0):
+
+Todo
+
 
 ###Enumerating Module Channels
 You can publish an MQTT message with topic '&lt;rx-topic-prefix>/enu/chns' and in response P2M will publish all modules/channels that have
