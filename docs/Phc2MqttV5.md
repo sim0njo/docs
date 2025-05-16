@@ -849,6 +849,9 @@ Properties:
 
 - icon: overrides the default HA <a href="https://www.home-assistant.io/integrations/binary_sensor/#device-class">'device_class'</a> for the channel
 
+- invert: inverts the interpretation of the 'on' and 'off' events
+
+
 Defaults per channel type:
 
 - in%: uses device_class 'none' as icon, events 'ingt0'/'ingt1'/'ingt2' show as 'on', events 'outlt1'/'outgt1'/'out' show as 'off'
@@ -868,6 +871,9 @@ For instance, when an input represents the open/close state of a door you could 
 
   {"desc":"Front Door","icon":"door"}
 
+Similar, you can invert the on/off state determination with following construct: 
+
+  {"desc":"Front Door","icon":"door","invert":1}
 
 
 ***Output Channels***  
