@@ -5,12 +5,12 @@ description: Phc2Mqtt v5.x.y.z
 !!! warning 
     Phc2Mqtt is not a commercial product and support is limited. 
     You have to be willing to research and solve potential problems yourself. 
-    The author has no liability, you can use this software at your own risk.
+    The author has no liability, you use this hardware/software at your own risk.
 
 !!! warning 
     When upgrading Phc2Mqtt v4.x.y.z to v5.x.y.z, you cannot use the OTA upgrade method (uploading via Firmware Upgrade) as a different bootloader is required.
-    You need to use 'ESP Web Installer' and select the 'erase' option before flashing the module,
-    this will completely erase the ESP32 and rewrite the correct bootloader, partition map and firmware image. 
+    You need to use 'ESP Web Installer' and select the 'erase device' option before flashing the module,
+    this will completely erase the ESP32 (loosing existing configuration) and rewrite the correct bootloader, partition map and firmware image. 
 
 ##Abbreviations
 | Term                  | Description                            
@@ -736,13 +736,13 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 
 - **Discovery Mode**: Here you select how to advertise the selected channels.  
 
-Device: In this mode each channel is advertised as a subdevice of an encapsulating PHC device identified as Module Device Name.
+-- **Device**: In this mode each channel is advertised as an entity of an encapsulating PHC device identified as Module Device Name (see Configure Module -> Device Name).
 
-Component: In this mode each channel is advertised in itself.
+-- **Component**: In this mode each channel is advertised as an entity in itself.
 
 - **Discovery Interval**: The rate at which to publish advertise messages.  
 
-- **Discovery Retain**: Enable/disable the retain flag in the MQTT messages.  
+- **Discovery Retain**: Enable/disable the retain flag in the MQTT discovery messages, it is advised to enable retain.  
 
 - **Save**: Press this button to save settings.  
 
@@ -819,7 +819,7 @@ After a few seconds the webpage will be redirected to P2M's homepage.
 
 ##Additional Info
 
-###Advertising to Home Assistant
+###Advertising your PHC system to Home Assistant
 Home Assistant (HA) is a leading automation integrator and we are trying to provide an easy way to advertise the capabilities of your
 PHC system to HA. This is done by publishing selected channels via MQTT to the HA discovery topic.
 
@@ -834,107 +834,193 @@ Actually any input and output channel.
 - P2M Main Menu -> Configure -> Configure STM HA Advertising: select 'device' or 'component' mode and press 'Advertise Now'.
 
 **What is advertised?**  
-Per channel a number of methods and/or properties are advertised, each of these have default values that can be overridden by modifying the channel's 'Description'
-in the PHC Systemsoftware 3.x.y, as explained further on.
+Per channel a number of methods and/or properties are advertised.
 
-Methods are used by HA to control the channel (i.e. on/off) while properties are used by HA to report the channel in it's dashboard(s).
+Methods are used by HA to control the channel (i.e. on/off) while properties are used by HA to represent the channel in it's dashboard(s).
+
+Each of these have default values that can be overridden by modifying the channel's 'Description' in the PHC Systemsoftware 3.x.y into a JSON formatted string like this:
+
+&nbsp;&nbsp;  {"desc":"&lt;description>","&lt;property|method>":"&lt;value>"}
+
 
 
 **How will channels be advertised?**
 
 ***Input Channels***  
-Are advertised as 'binary_sensor' component, they report their state as 'on' or 'off' and are represented with an icon (device_class), all depending on input type.
+Are advertised as 'binary_sensor' entities, they report their state as 'on' or 'off' and are represented with the default device_class (None).
 
-Properties:
-
-- icon: overrides the default HA <a href="https://www.home-assistant.io/integrations/binary_sensor/#device-class">'device_class'</a> for the channel
-
-- invert: inverts the interpretation of the 'on' and 'off' events
-
-
-Defaults per channel type:
-
-- in%: uses device_class 'none' as icon, events 'ingt0'/'ingt1'/'ingt2' show as 'on', events 'outlt1'/'outgt1'/'out' show as 'off'
-
-- il%: uses device_class 'light' as icon, event 'dark' shows as 'off', event 'bright' shows as 'on'
-
-- im%: uses device_class 'motion' as icon, event 'stop' shows as 'off', event 'start' shows as 'on'
-
-- ir%: not supported for now
-
-If you want a different icon to be used then you need to modify the channel 'Description' in PHC Systemsoftware 3.x.y into a JSON formatted string like this:
-
-  {"desc":"&lt;description>","&lt;property>":"&lt;value>"}
+Properties:  
+-- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/binary_sensor/#device-class">device_class</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement, ...  
+-- **icon**: overrides the (device class) icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon  
+-- **invert**: inverts the interpretation of the 'on' and 'off' events, defaults to 'no invert'
 
 
-For instance, when an input represents the open/close state of a door you could change the icon to a door as follows:
+Default state mapping per channel type:  
+-- **in%**: events 'ingt0'/'ingt1'/'ingt2' report as 'on', events 'outlt1'/'outgt1'/'out' report as 'off'
 
-  {"desc":"Front Door","icon":"door"}
+-- **il%**: event 'bright' reports as 'on', event 'dark' reports as 'off'
 
-Similar, you can invert the on/off state determination with following construct: 
+-- **im%**: event 'start' reports as 'on', event 'stop' reports as 'off'
 
-  {"desc":"Front Door","icon":"door","invert":1}
+-- **ir%**: not supported for now
+
+Property/method override samples:  
+-- An input monitoring the open/close state of a door, you could change the representation to a door as follows:
+
+  {"desc":"Front Door","dc":"door"}
+
+-- Similar, you can invert the on/off state determination with following construct: 
+
+  {"desc":"Front Door","dc":"door","invert":1}
+
+-- For a movement detector (ie bwm.0.im0) you can do following: 
+
+  {"desc":"Movement Hall","dc":"motion"}
+
+-- For a light detector (ie bwm.0.il2)  you can do following: 
+
+  {"desc":"Movement Hall","dc":"light"}
 
 
 ***Output Channels***  
-Are advertised as different component types (light/cover/...), have support methods (on/off,up/down/stop,...) to control the channel, and report their state, all depending on output type.
+Are advertised as different entity types (light/cover/...) depending on channel type, see further.
 
-Each method has a default PHC-cmd linked to it as listed per output type.
-If you want to link a different PHC-cmd then you need to modify the channel 'Description' in PHC Systemsoftware 3.x.y into a JSON formatted string like this:
-
-  {"desc":"&lt;description>","&lt;method>":"&lt;PHC-cmd>"}
-  
-Make sure the &lt;PHC-cmd> provided is valid for the respective module type as there is no validation done, refer to [PHC Cmd Reference](#phc-cmd-reference).
+They have methods (on/off,up/down/stop,...) to control the channel, where each method is linked to a default PHC-cmd as indicated per output type. This can be overridden as explained before. Make sure the overriding PHC-cmd is valid as no validation is performed, refer to [PHC Cmd Reference](#phc-cmd-reference).
 
 
 - **Output modules output** (i.e. omd.0.out0): 
 
-Are advertised as 'light' component and support following methods:  
--- '**on**': maps to PHC-cmd 'on' (results in omd.0.out0.on)  
--- '**off**': maps to PHC-cmd 'off' (results in omd.0.out0.off)
+Are advertised as 'light' entities with following properties and methods.
+
+Properties:  
+-- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
+
+Methods:  
+-- **on**: maps to PHC-cmd 'on' (results in omd.0.out0.on)  
+-- **off**: maps to PHC-cmd 'off' (results in omd.0.out0.off)
   
-Suppose you have a stairway and want to turn the light on for 60 seconds instead of permanent then change the channel description to:
+Property/method override samples:  
+-- Suppose you have a stairway and want to turn the light on for 60 seconds instead of permanent then change the channel description to:
 
   {"desc":"Stairway Light","on":"ontimed.60"}
+
+-- Similar you can change the icon for an output that controls a ventilator like this:
+
+  {"desc":"Bathroom Ventilator","icon":"mdi:fan"}
 
 
 - **Shutter modules output** (i.e. jrm.0.out0): 
 
-Are advertised as 'cover' component and support following methods:  
--- '**up**': maps to PHC-cmd 'delayedup.0.0.0.150' (prio=0,lock=0,delay=0,run=15s)  
--- '**down**': maps to PHC-cmd 'delayeddowntip.0.0.0.150.20' (prio=0,lock=0,delay=0,run=15s,tip=2s)  
--- '**stop**': maps to PHC-cmd 'stop.0' (prio=0)
+Are advertised as 'cover' entities with following properties and methods.
 
-Suppose you have a shutter in your living room that takes 20 seconds to open/close and requires 3 seconds tip time, then change the channel description to:
+Properties:  
+-- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/cover/#device-class">'device_class'</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement, ...  
+-- **icon**: overrides the (device class) icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
+
+Methods:  
+-- **up**: maps to PHC-cmd 'delayedup.0.0.0.150' (prio=0,lock=0,delay=0,run=15s)  
+-- **down**: maps to PHC-cmd 'delayeddowntip.0.0.0.150.20' (prio=0,lock=0,delay=0,run=15s,tip=2s)  
+-- **stop**: maps to PHC-cmd 'stop.0' (prio=0)
+
+Property/method override samples:  
+-- Suppose you have a shutter in your living room that takes 20 seconds to open/close and requires 3 seconds tip time, then change the channel description to:
 
   {"desc":"Livingroom Shutter","up":"delayedup.0.0.0.200","down":"delayeddowntip.0.0.0.200.30"}
 
 
 - **Input modules LED** (i.e. imd.0.led0):
 
-Are advertised as 'light' component and support following methods:  
--- '**on**': maps to PHC-ccmd 'on' (results in imd.0.led0.on)  
--- '**off**': maps to PHC-ccmd 'off' (results in imd.0.led0.off)
+Are advertised as 'light' component with following properties and methods.
+
+Properties:  
+-- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
+
+Methods:  
+-- **on**: maps to PHC-ccmd 'on' (results in imd.0.led0.on)  
+-- **off**: maps to PHC-ccmd 'off' (results in imd.0.led0.off)
   
-Suppose you want to use a blinking led to report an alarm (provided the channel supports this command), then change the channel description to:
+Property/method override samples:  
+-- Suppose you want to use a blinking led to report an alarm (provided the channel supports this command), then change the channel description to:
 
   {"desc":"Alarm Indication","on":"blink"}
   
 
 - **Input modules merker** (i.e. imw.0.mrk0):
 
-Are advertised as 'light' component and support following methods:  
--- '**set**': maps to PHC-ccmd 'set' (results in imw.0.mrk0.set)  
--- '**reset**': maps to PHC-ccmd 'set' (results in imw.0.mrk0.reset)
-  
-Suppose you want to turn a merker on for 25 seconds instead of permanent then change the channel description to:
+Are advertised as 'light' component with following properties and methods.
 
-  {"desc":"Some Merker","set":"settimed.25"}
+Properties:  
+-- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
+
+Methods:  
+-- **on**: maps to PHC-ccmd 'set' (results in imw.0.mrk0.set)  
+-- **off**: maps to PHC-ccmd 'reset' (results in imw.0.mrk0.reset)
+  
+Property/method override samples:  
+-- Suppose you want to turn a merker on for 25 seconds instead of permanent then change the channel description to:
+
+  {"desc":"Some Merker","on":"settimed.25"}
 
   
 - **Dimmer modules output/level** (i.e. dim.0.out0 or dim.0.lvl0):
 
-Todo
+Are advertised as 'light' component.
+
+Properties:  
+-- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
+
+Methods:  
+-- **on**: maps to PHC-ccmd 'onmem' (results in dim.0.out0.onmem)  
+-- **off**: maps to PHC-ccmd 'off' (results in dim.0.out0.off)
+  
+
+***Buttons***  
+Above explanations always interacted directly with a channel, but sometimes you want to trigger the programmed logic in the STM or SRS.
+
+We accomodate this by means of a "button" functionaly linked to one or more PHC-cmd's when you press it in a dashboard, but without state.
+
+You configure it by entering following JSON formatted data in the channel description:
+
+  {"desc":"&lt;description>","comp":"button","&lt;method>":"&lt;PHC-cmd>*[; &lt;PHC-cmd>]"}
+
+- **Input Buttons**:
+
+Are defined on an input channel and are advertised as 'button' component with following properties and methods.
+
+Properties:  
+-- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
+
+Methods:  
+-- **press**: maps to one or more PHC-ccmd's, the default is "press"
+
+Property/method override samples:  
+-- A simple "AllOff" button can be defined as follows, note that the STM should have programming to handle the imd.0.in15.ingt2 command. 
+
+  {"desc":"AllOff","comp":"button","press":"imd.0.in15.ingt2"}
+
+
+- **Shutter Group Buttons**:
+
+Are defined on a (spare or virtual) shutter channel and are advertised as 'cover' component with following properties and methods.
+
+Properties:  
+-- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/cover/#device-class">'device_class'</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement, ...  
+-- **icon**: overrides the (device class) icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
+
+Methods:  
+-- **up**: must be mapped to an 'up' trigger for the shutter group, default is "up"  
+-- **down**: must be mapped to a 'down' trigger for the shutter group, default is "down"  
+-- **stop**: must be mapped to a 'stop' trigger for the shutter group, dfault is "stop"
+
+Property/method override samples:  
+-- Given a shutter group was defined in STM programming that uses imd.0.in9 to trigger the 'up' action and imd.0.in10 to trigger the 'down' action, 
+we can specify this as: 
+
+  {"desc":"shutterGroup","comp":"button","up":"imd.0.in9.ingt1","down":"imd.0.in10.ingt1","stop":"imd.0.in9.ingt0"}
+
+
+
+
 
 
 ###Enumerating Module Channels
