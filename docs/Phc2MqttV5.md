@@ -67,6 +67,9 @@ for an STMv3 this is an ethernet interface with the XMLRPC protocol.
 From version 4.2.0.0 on we introduce the Simple Rule Server daemon (SRSD), this server lets you specify JSON format rules that are triggered by
 events and which can execute one or more actions. See [Simple Rule Server](/phc2mqtt/SimpleRuleServer) for details.
 
+After the initial release of v5 firmware we decided to change the version numbering into v5.xx.yy. In v5.02.00 a full documented integration for 
+Home Assistant is provided by means of MQTT Discovery.
+
 
 ## Hardware
 The initial version of the P2M PCB was v1.2. Feedback from testers showed some issues in the design
