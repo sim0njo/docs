@@ -956,13 +956,13 @@ Properties:
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
 
 Methods:  
--- **on**: maps to PHC-ccmd 'set' (results in imw.0.mrk0.set)  
--- **off**: maps to PHC-ccmd 'reset' (results in imw.0.mrk0.reset)
+-- **on**: maps to PHC-ccmd 'on' (results in imw.0.mrk0.on)  
+-- **off**: maps to PHC-ccmd 'off' (results in imw.0.mrk0.off)
   
 Property/method override samples:  
 -- Suppose you want to turn a merker on for 25 seconds instead of permanent then change the channel description to:
 
-  {"desc":"Some Merker","on":"settimed.25"}
+  {"desc":"Some Merker","on":"ontimed.25"}
 
   
 - **Dimmer modules output/level** (i.e. dim.0.out0 or dim.0.lvl0):
@@ -1021,25 +1021,15 @@ we can specify this as:
 
   {"desc":"shutterGroup","comp":"button","up":"imd.0.in9.ingt1","down":"imd.0.in10.ingt1","stop":"imd.0.in9.ingt0"}
 
+-- Above sample works fine, but you will be able to go directly from moving up to moving down. In a real PHC system this is prohibited because the 'ingt0'
+will come before the 'ingt1' event, where 'ingt0' will stop the shutter first. Then 1 second later it will be instructed to move up/down. You can simulate this with following definition: 
+
+  {"desc":"shutterGroup","comp":"button","up":"imd.0.in9.ingt0;imd.0.in9.ingt1","down":"imd.0.in9.ingt0;imd.0.in10.ingt1","stop":"imd.0.in9.ingt0"}
 
 
 
 
 
-###Enumerating Module Channels
-You can publish an MQTT message with topic '&lt;rx-topic-prefix>/enu/chns' and in response P2M will publish all modules/channels that have
-a description specified in the Systemsoftware and which are valid for the respective module.
-
-An external system could use this info to learn about the PHC system and/or configure something like Home Assistant.
-
-```
-<tx-topic-prefix>/enu/<mod>.<addr> = <description>
-
-e.g. alias/p2m/enu/imd.0.in.0 = Living Shutter Up
-e.g. alias/p2m/enu/imd.0.in.1 = Living Shutter Down
-e.g. alias/p2m/enu/jrm.0.out0 = Living Shutter
-e.g. alias/p2m/enu/omd.0.out0 = Living Main Light
-```
 
 ###Web Console Commands
 There are a number of commands you can specify in the command line of the Web Console, press '?' and &lt;enter> to get a list. 
