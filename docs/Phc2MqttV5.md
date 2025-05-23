@@ -985,6 +985,10 @@ We accomodate this by means of a "button" functionaly linked to one or more PHC-
 You configure it by entering following JSON formatted data in the channel description:
 
   {"desc":"&lt;description>","comp":"button","&lt;method>":"&lt;PHC-cmd>*[; &lt;PHC-cmd>]"}
+  
+This will result in a MQTT message published to topic "&lt;Module.RxTopicPfx>/cmd/ccmd" with payload/data "&lt;PHC-cmd>*[; &lt;PHC-cmd>", 
+where &lt;Module.RxTopicPfx> is defined in Configure Module -> MQTT RX Topic Prefix.
+
 
 - **Input Buttons**:
 
@@ -1000,6 +1004,8 @@ Property/method override samples:
 -- A simple "AllOff" button can be defined as follows, note that the STM should have programming to handle the imd.0.in15.ingt2 command. 
 
   {"desc":"AllOff","comp":"button","press":"imd.0.in15.ingt2"}
+
+Pressing the 'press' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in15.ingt2"  
 
 
 - **Shutter Group Buttons**:
@@ -1020,6 +1026,11 @@ Property/method override samples:
 we can specify this as: 
 
   {"desc":"shutterGroup","comp":"button","up":"imd.0.in9.ingt1","down":"imd.0.in10.ingt1","stop":"imd.0.in9.ingt0"}
+  
+Pressing the 'up' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in9.ingt1"  
+Pressing the 'down' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in10.ingt1"  
+Pressing the 'stop' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in9.ingt0"
+
 
 -- Above sample works fine, but you will be able to go directly from moving up to moving down. In a real PHC system this is prohibited because the 'ingt0'
 will come before the 'ingt1' event, where 'ingt0' will stop the shutter first. Then 1 second later it will be instructed to move up/down. You can simulate this with following definition: 
