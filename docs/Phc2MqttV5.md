@@ -8,7 +8,7 @@ description: Phc2Mqtt v5.x.y.z
     The author has no liability, you use this hardware/software at your own risk.
 
 !!! warning 
-    When upgrading Phc2Mqtt v4.x.y.z to v5.x.y.z, you cannot use the OTA upgrade method (uploading via Firmware Upgrade) as a different bootloader is required.
+    When upgrading Phc2Mqtt v4.x.y.z to v5.x.y, you cannot use the OTA upgrade method (uploading via Firmware Upgrade) as a different bootloader is required.
     You need to use 'ESP Web Installer' and select the 'erase device' option before flashing the module,
     this will completely erase the ESP32 (loosing existing configuration) and rewrite the correct bootloader, partition map and firmware image. 
 
@@ -24,8 +24,8 @@ description: Phc2Mqtt v5.x.y.z
 | STM | STeering Module, the central processor in a PHC system
 | System Software | The PEHA Windows application to configure and program your PHC system  
 | PCB | Printed Circuit Board, a non-conductive material with copper patterns on 1 or 2 sides to interconnect electronic components
-| ESP32 DevkitC | The ESP32 dual core module that is used for Phc2Mqtt, we use the WROVER version with 4Mb/8Mb flash memory and 4Mb PSRAM
-| LilyGo T-ETH Lite | The ESP32 dual code module with ethernet that is used on PCB v3.x, with WROVER
+| ESP32 DevkitC-VE |  The ESP32 WROVER dual core module used on PCB v1.x/2.x, supporting Wifi, 4Mb/8Mb flash memory and 4Mb/8Mb PSRAM
+| LilyGo T-ETH Lite | The ESP32 WROVER dual core module used on PCB v3.x, supporting ethernet/Wifi, 4Mb/8Mb flash memory and 4Mb/8Mb PSRAM
 | P2M | The combination of the hardware and software that make up the functionality of Phc2Mqtt
 | Sub-system | A functional part of P2M that performs a certain task and is under supervision of P2M
 | NVS | Non-volatile storage, a part of memory that stores data and settings permanently, even when power fails
@@ -44,9 +44,9 @@ From 2007 on a move was made to support Windows and Linux with a cross platform 
 
 As the Raspberry Pi does not handle power fails very well, another solution was needed in the form of an embedded system, we choose the ESP32. 
 
-In 2020 we finally started extending the cross platform framework to FreeRTOS/ESP32 and Phc2Mqtt saw the light in early 2021.
+In 2020, during COVID lockdown, we finally started extending the cross platform framework to FreeRTOS/ESP32 and Phc2Mqtt saw the light in early 2021.
 
-## Contribute
+## Contributing & Support
 Any input from the users is welcome, report your problems/questions/wishes to [simonjo@telenet.be](mailto:simonjo@telenet.be)
 and we (me, myself and I) will help you as soon as possible,
 
@@ -62,13 +62,13 @@ and 1 or more PHC modules connected over an RS485 PHC module bus, communicating 
 
 The STM also has a management interface via which it is configured using the Systemsoftware,
 for an STMv1/2 this is an RS232 serial link with a binary protocol,
-for an STMv3 this is an ethernet interface with the XMLRPC protocol.
+for an STMv3 this is an ethernet interface with the XMLRPC-over-HTTP protocol.
 
 From version 4.2.0.0 on we introduce the Simple Rule Server daemon (SRSD), this server lets you specify JSON format rules that are triggered by
-events and which can execute one or more actions. See [Simple Rule Server](/phc2mqtt/SimpleRuleServer) for details.
+events and which can execute one or more actions. See [Simple Rule Server](/docs/SimpleRuleServer) for details.
 
 After the initial release of v5 firmware we decided to change the version numbering into v5.xx.yy. In v5.02.00 a full documented integration for 
-Home Assistant is provided by means of MQTT Discovery.
+Home Assistant is provided by means of MQTT Discovery. Read section [Advertising your PHC system to Home Assistant](#advertising-your-phc-system-to-home-assistant) for details.
 
 
 ## Hardware
@@ -83,7 +83,7 @@ To the right is the layout of the PCB, it fits in a 3MOD DIN-rail housing, relev
 
 - CN1/CN2 are the PHC module bus connectors  
 - X2 is an optional 24V power connector, not used  
-- ESP32-DevkitC with a red power LED, this is the CPU  
+- ESP32-DevkitC-VE with a red power LED, this is the CPU  
 - Pushbutton at the bottom labeled 'WIFI'  
 - Pushbutton at the bottom labeled 'SPARE', not used  
 - Pushbutton at the bottom labeled 'EN'  
@@ -138,7 +138,7 @@ It still fits in a 3MOD DIN-rail housing. If the housing has a red transparent t
     if you want to power it via USB you need to remove the cap from the PWR connector first (top/center on main PCB).
 
 ###Version 2.2/2.3 (jul-2022)
-This version has a single mainboard that contains the ESP32-DevkitC, it's form maximalizes the board space available
+This version has a single mainboard that contains the ESP32-DevkitC-VE, it's form maximalizes the board space available
 while fitting in a custom 3D printed 2MOD DIN-rail housing.
 
 It draws power from the PHC power supply by means of a DC/DC convertor and the RTC (realtime clock) is powered by a CR1220 replacable battery. 
@@ -207,17 +207,17 @@ When the P2M module boots, it will start subsystems such that the subsystem Oper
 Depending on the operating mode of P2M (Proxy, PassiveSTMv3 or ActiveSTMv3), a different setup will be required.
 
 ###Proxy mode
-In this mode P2M is chained into the PHC module bus using two 6-wire cables with RJ11 male connectors,
-and it will passively monitor messages exchanged between PHC modules and STM.
+In this mode P2M is chained into the PHC module bus as slave. Using two 6-wire cables with RJ11 male connectors,
+passively monitoring messages exchanged between PHC modules and STM.
 
 Following drawing gives an overview of the end-to-end system architecture.
 
-The intention is that P2M connects to the wireless LAN (WLAN)
+The intention is that P2M connects to the wired/wireless local network (LAN/WLAN)
 such that the Systemsoftware and a web browser have access to it for configuration and reporting purposes.
 
-It is via the same WLAN access that P2M will connect to an MQTT Broker to provide it's services to a wider community.
+It is via the same network access that P2M will connect to an MQTT Broker to provide it's services to a wider community.
 
-Finally an optional IP-wise connection to the STM management interface is made through the WLAN to send commands to the PHC system.
+Finally an optional IP-wise connection to the STM management interface is made through the network to send commands to the PHC system.
 In case of the older STMv1/v2 you also need an IP-2-RS232 convertor like MOXA NPort 5110 and the sorts.
 In case of the STMv3 you can directly use it&#39;s network connection.
 
@@ -229,27 +229,37 @@ In case of the STMv3 you can directly use it&#39;s network connection.
 In this mode the real STM module (v1/2/3) is removed from the PHC system, and P2M takes it&#39;s place. P2M will
 be the master of the PHC module bus and talks directly to the PHC modules.
 
-Same as in Proxy mode, P2M connects to the wireless LAN (WLAN)
+Same as in Proxy mode, P2M connects to the wired/wireless local network (LAN/WLAN)
 such that the Systemsoftware and a web browser have access to it for configuration and reporting purposes.
 
-It is via the same WLAN access that P2M will connect to an MQTT Broker to provide it's services to a wider community.
+It is via the same network access that P2M will connect to an MQTT Broker to provide it's services to a wider community.
 
-In PassiveSTMv3 mode no additional hardware is needed to send commands to the PHC system as it is actively connected to the PHC module bus.
+In PassiveSTMv3 mode no additional hardware is needed to send commands to the PHC system as P2M is directly connected to the PHC module bus as master.
 P2M will provide configuration information to the PHC modules when they (re)boot, it will acknowledge events sent by the PHC modules and report them (to MQTT, SRS),
 and finally it will translate incoming MQTT commands and send them to the PHC modules, all in a timely fashion respecting the bus protocol and timing.
 
-The reason why we call this PassiveSTMv3 mode is because P2M does not handle PHC module events, it just forwards them over MQTT.
-Opposed to a real STM that will lookup the event in the internal program memory and execute the commands linked to the event.
+The reason why we call this PassiveSTMv3 mode is because P2M does not handle PHC module events like a real STM does, it just forwards them over MQTT or to SRS.
+
+Opposed to a real STM that will lookup a module event in the internal program memory and execute the commands linked to the event.
+
+The SRS can take over the functionality of a real STM by means of it's rules, resulting in a standalone system that can behave as the original PHC system.
 
 <p align="center">
 <img src="../img/p2m-e2e-passive.jpg" width="457" height="365"></td>
 </p>
 
 ##First usage of P2M
-When you use P2M for the first time it will not be configured, you must first setup the Wifi connection to make your P2M
+When you use P2M for the first time it will not be configured, you must first setup the network connection to make your P2M
 reachable and then do basic configuration before connecting P2M to your PHC system.
 
-###Linking P2M to your Wifi network
+###Ethernet version
+- The ethernet version of P2M will start by default in ethernet mode, just plug in the network cable and the module will receive an IP address.
+Now continue with [Finding P2M IP address](#finding-p2m-ip-address).
+
+- If you don't have a wired network connection available, you can revert to AP-mode by holding down the <b>WIFI</b> button while powering the module.
+Then continue with [Connecting P2M to your Wifi network](#connecting-p2m-to-your-wifi-network).
+
+###Connecting P2M to your Wifi network
 - An unconfigured P2M cannot connect to your Wifi network, therefore it will startup in AP-mode whereby the red LED will be on continiously.
 
 - <b style="color:red">Note: </b>In AP-mode only the webserver will run to allow configuration of P2M.
@@ -260,21 +270,21 @@ the x's represent the lower 3 bytes of the P2M's MAC address.
 - Once connected to P2M's AP, use a web browser to access it on <b>192.168.4.1</b>,
 you will receive the main webpage as described in chapter 6.1.
 
-- Goto [Configure Wifi](#configure-wifi) to configure the Wifi settings.
+- Goto [Configure Network](#configure-network) to configure the network settings.
 
-- After you configured the Wifi settings, reboot P2M via <b>Main Menu</b>-><b style="color:red">Reboot</b> (preferred),
+- After you configured the network settings, reboot P2M via <b>Main Menu</b>-><b style="color:red">Reboot</b> (preferred),
 alternatively you can press the <b>EN</b> button (less preferred).
 
-- The P2M module starts up and lights both red and blue LEDs, then connects to your Wifi network, after which both LEDs will turn off,
-P2M is now in STA-mode.
+- The P2M module starts up and lights both red and blue LEDs, then connects to your network, after which both LEDs will turn off,
+P2M is now in STA-mode or ETH-mode.
 
 - P2M will try to obtain date/time from
 the Internet by means of SNTP or read it from the RTC module if one is installed.
 
 
-###Finding P2M linked to your Wifi network
+###Finding P2M IP address
 
-- Now P2M is connected to your Wifi network, you need to find out it's IP address.
+- Now P2M is connected to your wired/wireless network, you need to find out it's IP address.
 
 - If your P2M has the optional OLED display, then press button <b>B1</b> or <b>B2</b> to display P2M's IP address.
 
@@ -297,13 +307,13 @@ each -  : 1/4 second
 ```
 
 
-- You can also you log on to your Wifi router to consult the list of connected clients.
+- You can also you log on to your network router to consult the list of connected clients.
 Look for an entry showing 'Espressif', enter the shown IP address in a web browser, you should see the [Main Menu](#main-menu) webpage.
 
-- As above IP address is obtained via DHCP from your Wifi network, it may be different each time P2M reboots.
-It is preferred to assign a fixed IP address to P2M in your Wifi router menu and save the settings.
+- As above IP address is obtained via DHCP from your network router, it may be different each time P2M reboots.
+It is preferred to assign a fixed IP address to P2M in your network router menu and save the settings.
 
-- Now reboot P2M, your Wifi router will assign it a fixed/DHCP IP address each time P2M starts up.
+- Now reboot P2M, your network router will assign it a fixed/DHCP IP address each time P2M starts up.
 
 - Use a web browser to access P2M on the known IP address.
 
@@ -319,8 +329,7 @@ Before connecting P2M to your PHC system, it is recommended that you perform at 
 
 - [Configure PHC Interfaces](#configure-phc-interfaces) and put PHC Mgmt Interface Admin State to 'Enabled', then press Save  
 
-- [Configure STM Daemon](#configure-stm-daemon) and put Operating Mode to 'Proxy', 
-  select 'Generate from transferred project' under Configuration, then press Save
+- [Configure STM Daemon](#configure-stm-daemon) and put Admin Mode to 'Proxy' under Configuration, then press Save
 
 - Reboot the module to let changes take effect    
 
@@ -362,7 +371,7 @@ Then plug a new 6-wire cable with 2 RJ11 connectors in <b>CN2/BUS2</b> of P2M an
 
 - You will see the red power LED on the ESP32-DevkitC turn on.
 
-- P2M will start up an connect to your Wifi network.
+- P2M will start up an connect to your local network.
 
 
 ##Web Interface
