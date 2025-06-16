@@ -914,7 +914,7 @@ Methods:
 Property/method override samples:  
 -- Suppose you have a stairway and want to turn the light on for 60 seconds instead of permanent then change the channel description to:
 
-  {"desc":"Stairway Light","on":"ontimed.60"}
+  {"desc":"Stairway Light","on":"omd.0.out0.ontimed.60"}
 
 -- Similar you can change the icon for an output that controls a ventilator like this:
 
@@ -930,9 +930,9 @@ Properties:
 -- **icon**: overrides the (device class) icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
 
 Methods:  
--- **up**: maps to PHC-cmd 'jrm.0.out0.delayedup.0.0.0.150' (prio=0,lock=0,delay=0,run=15s)  
--- **down**: maps to PHC-cmd 'jrm.0.out0.delayeddowntip.0.0.0.150.20' (prio=0,lock=0,delay=0,run=15s,tip=2s)  
--- **stop**: maps to PHC-cmd 'jrm.0.out0.stop.0' (prio=0)
+-- **up**: maps to PHC-cmd 'up' (results in 'jrm.0.out0.delayedup.0.0.0.150' prio=0,lock=0,delay=0,run=15s)  
+-- **down**: maps to PHC-cmd 'down' (results in 'jrm.0.out0.delayeddowntip.0.0.0.150.20' prio=0,lock=0,delay=0,run=15s,tip=2s)  
+-- **stop**: maps to PHC-cmd 'stop' (results in 'jrm.0.out0.stop.0' prio=0)
 
 Property/method override samples:  
 -- Suppose you have a shutter in your living room that takes 20 seconds to open/close and requires 3 seconds tip time, then change the channel description to:
