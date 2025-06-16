@@ -836,7 +836,7 @@ Home Assistant (HA) is a leading automation integrator and we are trying to prov
 PHC system to HA. This is done by publishing selected channels via MQTT to the HA discovery topic.
 
 **Which channels can be advertised?**  
-Actually any input and output channel.
+Actually any input and output channel and also function buttons.
 
 **How to enable this?**
 
@@ -874,7 +874,7 @@ Default state mapping per channel type:
 
 -- **im%**: event 'start' reports as 'on', event 'stop' reports as 'off'
 
--- **ir%**: not supported for now
+-- **ir%**: events 'onoffin'/'upin'/'downin' report as 'on', events 'onoffout'/'upout'/'downout' report as 'off'
 
 Property/method override samples:  
 -- An input monitoring the open/close state of a door, you could change the representation to a door as follows:
