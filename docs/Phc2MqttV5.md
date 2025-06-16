@@ -862,8 +862,8 @@ Each of these have default values that can be overridden by modifying the channe
 Are advertised as 'binary_sensor' entities, they report their state as 'on' or 'off' and are represented with the default device_class (None).
 
 Properties:  
--- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/binary_sensor/#device-class">device_class</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement, ...  
--- **icon**: overrides the (device class) icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon  
+-- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/binary_sensor/#device-class">device_class</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement. I.e. 'door'  
+-- **icon**: overrides the (device class) icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon. I.e. 'sdi:alarm'  
 -- **invert**: inverts the interpretation of the 'on' and 'off' events, defaults to 'no invert'
 
 
@@ -930,14 +930,14 @@ Properties:
 -- **icon**: overrides the (device class) icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
 
 Methods:  
--- **up**: maps to PHC-cmd 'delayedup.0.0.0.150' (prio=0,lock=0,delay=0,run=15s)  
--- **down**: maps to PHC-cmd 'delayeddowntip.0.0.0.150.20' (prio=0,lock=0,delay=0,run=15s,tip=2s)  
--- **stop**: maps to PHC-cmd 'stop.0' (prio=0)
+-- **up**: maps to PHC-cmd 'jrm.0.out0.delayedup.0.0.0.150' (prio=0,lock=0,delay=0,run=15s)  
+-- **down**: maps to PHC-cmd 'jrm.0.out0.delayeddowntip.0.0.0.150.20' (prio=0,lock=0,delay=0,run=15s,tip=2s)  
+-- **stop**: maps to PHC-cmd 'jrm.0.out0.stop.0' (prio=0)
 
 Property/method override samples:  
 -- Suppose you have a shutter in your living room that takes 20 seconds to open/close and requires 3 seconds tip time, then change the channel description to:
 
-  {"desc":"Livingroom Shutter","up":"delayedup.0.0.0.200","down":"delayeddowntip.0.0.0.200.30"}
+  {"desc":"Livingroom Shutter","up":"jrm.0.out0.delayedup.0.0.0.200","down":"jrm.0.out0.delayeddowntip.0.0.0.200.30"}
 
 
 - **Input modules LED** (i.e. imd.0.led0):
@@ -954,7 +954,7 @@ Methods:
 Property/method override samples:  
 -- Suppose you want to use a blinking led to report an alarm (provided the channel supports this command), then change the channel description to:
 
-  {"desc":"Alarm Indication","on":"blink"}
+  {"desc":"Alarm Indication","on":"imd.0.led0.blink"}
   
 
 - **Input modules merker** (i.e. imw.0.mrk0):
@@ -971,7 +971,7 @@ Methods:
 Property/method override samples:  
 -- Suppose you want to turn a merker on for 25 seconds instead of permanent then change the channel description to:
 
-  {"desc":"Some Merker","on":"ontimed.25"}
+  {"desc":"Some Merker","on":"imw.0.mrk0.ontimed.25"}
 
   
 - **Dimmer modules output/level** (i.e. dim.0.out0 or dim.0.lvl0):
@@ -986,7 +986,7 @@ Methods:
 -- **off**: maps to PHC-ccmd 'off' (results in dim.0.out0.off)
   
 
-***Buttons***  
+***Function Buttons***  
 Above explanations always interacted directly with a channel, but sometimes you want to trigger the programmed logic in the STM or SRS.
 
 We accomodate this by means of a "button" functionaly linked to one or more PHC-cmd's when you press it in a dashboard, but without state.
