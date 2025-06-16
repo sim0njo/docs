@@ -987,7 +987,7 @@ Methods:
   
 
 ***Function Buttons***  
-Above explanations always interacted directly with a channel, but sometimes you want to trigger the programmed logic in the STM or SRS.
+Above explanations always interacted directly with a channel, but sometimes you want to trigger a function in the programmed logic of the STM or SRS.
 
 We accomodate this by means of a "button" functionaly linked to one or more PHC-cmd's when you press it in a dashboard, but without state.
 
@@ -1001,7 +1001,7 @@ where &lt;Module.RxTopicPfx> is defined in Configure Module -> MQTT RX Topic Pre
 
 - **Input Buttons**:
 
-Are defined on an input channel and are advertised as 'button' component with following properties and methods.
+Are defined on a spare/vitrual input channel and are advertised as 'button' component with following properties and methods.
 
 Properties:  
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
@@ -1019,7 +1019,7 @@ Pressing the 'press' button in the HA dashboard sends a MQTT publish with topic 
 
 - **Shutter Group Buttons**:
 
-Are defined on a (spare or virtual) shutter channel and are advertised as 'cover' component with following properties and methods.
+Are defined on a spare/virtual shutter channel and are advertised as 'cover' component with following properties and methods.
 
 Properties:  
 -- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/cover/#device-class">'device_class'</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement, ...  
@@ -1041,8 +1041,10 @@ Pressing the 'down' button in the HA dashboard sends a MQTT publish with topic "
 Pressing the 'stop' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in9.ingt0"
 
 
--- Above sample works fine, but you will be able to go directly from moving up to moving down. In a real PHC system this is prohibited because the 'ingt0'
-will come before the 'ingt1' event, where 'ingt0' will stop the shutter first. Then 1 second later it will be instructed to move up/down. You can simulate this with following definition: 
+-- Above sample works, but you will be able to go directly from moving down to moving up (and reverse).
+In a real PHC system the shutter is first stopped because pressing the 'up' button first sends the 'ingt0' event which stops the shutter,
+and then 1 second later the 'ingt1' event is sent causing the shutter to start moving (up or down). This prevents damage from brute direction reversing.
+You can simulate this with following definition: 
 
   {"desc":"shutterGroup","comp":"button","up":"imd.0.in9.ingt0;imd.0.in9.ingt1","down":"imd.0.in9.ingt0;imd.0.in10.ingt1","stop":"imd.0.in9.ingt0"}
 
