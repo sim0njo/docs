@@ -908,13 +908,13 @@ Properties:
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
 
 Methods:  
--- **on**: maps to PHC-cmd 'on' (results in omd.0.out0.on)  
--- **off**: maps to PHC-cmd 'off' (results in omd.0.out0.off)
+-- **on**: defaults to PHC-cmd 'on' (results in omd.0.out0.on)  
+-- **off**: defaults to PHC-cmd 'off' (results in omd.0.out0.off)
   
 Property/method override samples:  
 -- Suppose you have a stairway and want to turn the light on for 60 seconds instead of permanent then change the channel description to:
 
-  {"desc":"Stairway Light","on":"omd.0.out0.ontimed.60"}
+  {"desc":"Stairway Light","on":"ontimed.60"}
 
 -- Similar you can change the icon for an output that controls a ventilator like this:
 
@@ -930,14 +930,14 @@ Properties:
 -- **icon**: overrides the (device class) icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
 
 Methods:  
--- **up**: maps to PHC-cmd 'up' (results in 'jrm.0.out0.delayedup.0.0.0.150' prio=0,lock=0,delay=0,run=15s)  
--- **down**: maps to PHC-cmd 'down' (results in 'jrm.0.out0.delayeddowntip.0.0.0.150.20' prio=0,lock=0,delay=0,run=15s,tip=2s)  
--- **stop**: maps to PHC-cmd 'stop' (results in 'jrm.0.out0.stop.0' prio=0)
+-- **up**: defaults to PHC-cmd 'delayedup.0.0.0.150' (results in 'jrm.0.out0.delayedup.0.0.0.150' prio=0,lock=0,delay=0,run=15s)  
+-- **down**: defaults to PHC-cmd 'delayeddowntip.0.0.0.150.20' (results in 'jrm.0.out0.delayeddowntip.0.0.0.150.20' prio=0,lock=0,delay=0,run=15s,tip=2s)  
+-- **stop**: defaults to PHC-cmd 'stop.0' (results in 'jrm.0.out0.stop.0' prio=0)
 
 Property/method override samples:  
 -- Suppose you have a shutter in your living room that takes 20 seconds to open/close and requires 3 seconds tip time, then change the channel description to:
 
-  {"desc":"Livingroom Shutter","up":"jrm.0.out0.delayedup.0.0.0.200","down":"jrm.0.out0.delayeddowntip.0.0.0.200.30"}
+  {"desc":"Livingroom Shutter","up":"delayedup.0.0.0.200","down":"delayeddowntip.0.0.0.200.30"}
 
 
 - **Input modules LED** (i.e. imd.0.led0):
@@ -948,13 +948,13 @@ Properties:
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
 
 Methods:  
--- **on**: maps to PHC-ccmd 'on' (results in imd.0.led0.on)  
--- **off**: maps to PHC-ccmd 'off' (results in imd.0.led0.off)
+-- **on**: defaults to PHC-ccmd 'on' (results in imd.0.led0.on)  
+-- **off**: defaults to PHC-ccmd 'off' (results in imd.0.led0.off)
   
 Property/method override samples:  
 -- Suppose you want to use a blinking led to report an alarm (provided the channel supports this command), then change the channel description to:
 
-  {"desc":"Alarm Indication","on":"imd.0.led0.blink"}
+  {"desc":"Alarm Indication","on":"blink"}
   
 
 - **Input modules merker** (i.e. imw.0.mrk0):
@@ -965,13 +965,13 @@ Properties:
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
 
 Methods:  
--- **on**: maps to PHC-ccmd 'on' (results in imw.0.mrk0.on)  
--- **off**: maps to PHC-ccmd 'off' (results in imw.0.mrk0.off)
+-- **on**: defaults to PHC-ccmd 'on' (results in imw.0.mrk0.on)  
+-- **off**: defaults to PHC-ccmd 'off' (results in imw.0.mrk0.off)
   
 Property/method override samples:  
 -- Suppose you want to turn a merker on for 25 seconds instead of permanent then change the channel description to:
 
-  {"desc":"Some Merker","on":"imw.0.mrk0.ontimed.25"}
+  {"desc":"Some Merker","on":"ontimed.25"}
 
   
 - **Dimmer modules output/level** (i.e. dim.0.out0 or dim.0.lvl0):
@@ -982,8 +982,8 @@ Properties:
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
 
 Methods:  
--- **on**: maps to PHC-ccmd 'onmem' (results in dim.0.out0.onmem)  
--- **off**: maps to PHC-ccmd 'off' (results in dim.0.out0.off)
+-- **on**: defaults to PHC-ccmd 'onmem' (results in dim.0.out0.onmem)  
+-- **off**: defaults to PHC-ccmd 'off' (results in dim.0.out0.off)
   
 
 ***Function Buttons***  
@@ -1040,13 +1040,6 @@ Pressing the 'up' button in the HA dashboard sends a MQTT publish with topic "&l
 Pressing the 'down' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in10.ingt1"  
 Pressing the 'stop' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in9.ingt0"
 
-
--- Above sample works, but you will be able to go directly from moving down to moving up (and reverse).
-In a real PHC system the shutter is first stopped because pressing the 'up' button first sends the 'ingt0' event which stops the shutter,
-and then 1 second later the 'ingt1' event is sent causing the shutter to start moving (up or down). This prevents damage from brute direction reversing.
-You can simulate this with following definition: 
-
-  {"desc":"shutterGroup","comp":"button","up":"imd.0.in9.ingt0;imd.0.in9.ingt1","down":"imd.0.in9.ingt0;imd.0.in10.ingt1","stop":"imd.0.in9.ingt0"}
 
 
 
