@@ -158,7 +158,20 @@ It draws power from the PHC power supply by means of a DC/DC convertor and the R
 &nbsp;  
 &nbsp;  
 &nbsp;  
-###Version 3.1 (jan-2025)
+!!! warning 
+    The P2M module is configured by default to power from the PHC module bus 24V (PWR jumper installed), 
+    if you want to power it via USB 5V using the ISP connector, you need to remove the cap from the PWR jumper first (top/center on PCB).
+
+!!! warning 
+    The P2M module is configured by default to connect the 24V lines of both BUS1/BUS2 connectors by means of the SPLIT jumper,
+    if needed you can remove the cap from the jumper to create 2 separate 24V segments.
+
+<p align="center">
+<img src="../img/p2m-v2.3.jpg" width="512" height="384"></td>
+</p>
+ 
+
+###Version 3.1/3.2 (jan-2025)
 This version has a single mainboard that contains the LilyGo T-ETH Lite board supporting Ethernet and Wifi, it's form maximalizes the board space available
 while fitting in a custom 3D printed 2MOD DIN-rail housing.
 
@@ -167,8 +180,8 @@ It draws power from the PHC power supply by means of a DC/DC convertor and the R
 <img style="float:right;width:290px;height:450px" src="../img/p2m-pcb-v3.x.jpg"></img>
 
 - BUS1/BUS2 are the PHC module bus connectors  
-- 2-pin header at top/center labeled 'PWR'  
-- 2-pin header at top/center labeled 'SPLIT'  
+- 2-pin jumper at top/center labeled 'PWR'  
+- 2-pin jumper at top/center labeled 'SPLIT'  
 - LilyGo T-Eth Lite module with ESP32 WROVER and Ethernet  
 - Multicolor red/green/blue LED on the right  
 - Pushbutton on the right labeled 'WIFI'  
@@ -180,15 +193,15 @@ It draws power from the PHC power supply by means of a DC/DC convertor and the R
 &nbsp;  
 &nbsp;  
 !!! warning 
-    The P2M module is configured by default to power from the PHC module bus, 
-    if you want to power it via USB you need to remove the cap from the PWR connector first (top/center on PCB).
+    The P2M module is configured by default to power from the PHC module bus 24V (PWR jumper installed), 
+    if you want to power it via USB 5V using the ISP connector, you need to remove the cap from the PWR jumper first (top/center on PCB).
 
 !!! warning 
-    The P2M module is configured by default to connect the 24V of both BUS1/BUS2 connectors by means of the SPLIT connector,
-    if needed you can remove the cap from the connector to create 2 separate 24V segments.
+    The P2M module is configured by default to connect the 24V lines of both BUS1/BUS2 connectors by means of the SPLIT jumper,
+    if needed you can remove the cap from the jumper to create 2 separate 24V segments.
 
 <p align="center">
-<img src="../img/p2m-v2.3.jpg" width="457" height="365"></td>
+<img src="../img/p2m-v3.2.jpg" width="512" height="384"></td>
 </p>
  
 
@@ -1042,6 +1055,58 @@ Pressing the 'stop' button in the HA dashboard sends a MQTT publish with topic "
 
 
 
+###The PHC Systen Explained
+
+The PHC (PEHA Home Control) system is a domotic system with 1 master (STM) and multiple slaves (input/output modules) that communicate over a half-duplex
+RS485 bus at 19200 baud, which is quiet slow.
+
+The reason for the low bus speed is most likely to avoid the need for bus termination and derived from that to allow many bus cabling topologies
+(line, star, combinations of...).
+
+A consequence is that communication between STM and modules needs to be limited both in size and number of messages sent.
+
+The size limit is achieved by working with binary encoded messages (opposed to text based messaging like MQTT), and even further reduced by omitting
+a start and end marker for a message. Given that an average message is 5 bytes long, adding a start and end marker byte would result in 40% overhead.
+
+To reduce the number of messages sent from modules to STM, PEHA decided that modules will need to be configured with channel/event combinations
+that function as a filter (opt-in principle).
+
+For instance: an input module checks it's inputs and finds that channel 'in0' generates the 'ingt0' event, it then looks into the configured 
+channel/event filters, and only if 'in0.ingt0' is present, will the module send this event over the bus to the STM.
+
+But how does the module get configured with these filters?
+
+When a module is powered on or restarted it knows nothing (which events to send, status of input/output channels, ...) and it does only 1 thing:
+send a 'boot' message onto the bus. The STM receives this message and will compose a 'boot config' message which includes the initial status
+of inputs/outputs and a list of channel/event combinations to be enabled for the module. The module stores this list and uses it to filter internal events
+and decide whether to send them to STM or not.
+
+But how does the STM know which module/channel/event combinations are required? Well the STM is just a dumb controller that uses an internal
+decision tree to determine which incoming event needs to trigger which action(s). It is also this internal decision tree that is used to build
+the 'boot config' message.
+
+But then again, where is this internal decision tree comming from?
+
+This is created by the System Software tool to configure your PHC project. There you will add your STM and modules, and define the interaction 
+between events (i.e. imd.0.in0.ingt0) and one or more actions (i.e. omd.0.out0.toggle). 
+
+When you transfer your project to the STM, the tool first
+combines all this programming into a binary file (.prg) which contains amongst other things the decision tree. This file is then transferred via
+the management interface to the STM, after which the STM instructs all modules to reboot and receive the new 'boot config' messages.
+
+Since the module bus is half duplex each party on the bus has to speak in turn, this is achieved by waiting for a specific period of silence on the module bus.
+
+The STM (being the master) has higher priority than modules and starts sending after 2 periods of silence while the modules start
+sending after 3 periods of silence.
+
+Furthermore, each message sent by either STM or module needs to be confirmed by the other side. So when the STM sends a message to a module, then 
+this module needs to reply with an ACK/NACK message, otherwise the STM considers it a timeout condition and will resend the message to the module
+for a limitted number of times (approx 64 times for a real STM, x for Phc2Mqtt in PassiveStmv3 mode).
+
+On the other hand, when a module sends a message to the STM, the STM shall send an ACK to the module to indicate it received the message and is handling
+it. If no timely ACK is received, the module will resend the message until it receives an ACK (if needed till hell freezes over).
+
+
 
 
 
@@ -1062,12 +1127,15 @@ admin save          save settings to NV ram of the ESP32
 admin reboot        reboot P2M in an ordered way
 admin shutdown      stop P2M in an ordered way before power off
 admin debug         report current debug settings
-admin dst reset     reset the daylight saving parameters to default
-admin dst start     change the start of daylight saving
-admin dst end       change the end of daylight saving
 admin debug reset   reset logging to default factory setting
 admin debug enable  enable a given logging source
 admin debug disable disable a given logging source
+admin tz            report current timezone settings
+admin tz reset      reset the timezone parameters to default
+admin tz std        change the standard time zone
+admin tz dst        change the daylight saving time zone
+admin tz dst start  change the start of daylight saving
+admin tz dst end    change the end of daylight saving
 stats               report sub-system statistics
 stats reset         reset sub-system statistics
 mqtc                report MQTT client extra settings and statistics
@@ -1088,11 +1156,14 @@ save                save settings to NV ram of the ESP32
 reboot              reboot P2M in an ordered way
 shutdown            stop P2M in an ordered way before power off
 debug               report current debug settings
-dst reset           reset the daylight saving parameters to default
-dst start           change the start of daylight saving
-dst end             change the end of daylight saving
 debug reset         reset logging to default factory setting
 debug enable        enable a given logging source
 debug disable       disable a given logging source
+tz                  report current timezone settings
+tz reset            reset the timezone parameters to default
+tz std              change the standard time zone
+tz dst              change the daylight saving time zone
+tz dst start        change the start of daylight saving
+tz dst end          change the end of daylight saving
 ```
 .
