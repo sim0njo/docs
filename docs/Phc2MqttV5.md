@@ -1172,10 +1172,10 @@ tz dst start        change the start of daylight saving
 tz dst end          change the end of daylight saving
 ```
 
-Some sample commands:
-admin debug enable 5
-admin debug disable 5
-admin tz std "UTC-1"
-admin tz dst "UTC-2"
-admin tz dst start 3 4
+Some sample commands:  
+admin debug enable 5  
+admin debug disable 5  
+admin tz std "UTC-1"  
+admin tz dst "UTC-2"  
+admin tz dst start 3 4  
 admin tz dst end 10 4
