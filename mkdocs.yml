@@ -59,6 +59,7 @@ nav:
   - Phc2Mqtt:
     - User Manual v4.x.y.z: Phc2Mqtt.md
     - User Manual v5.x.y: Phc2MqttV5.md
+#   - Em16OmdJrm Module: Em16OmdJrmV5.md
     - Phc Modules: PhcModules.md
     - Simple Rule Server: SimpleRuleServer.md
 #   - PCB Production Info: P2mGerbers.md

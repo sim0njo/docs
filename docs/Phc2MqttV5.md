@@ -1118,7 +1118,12 @@ You can also enter part of the command followed by '?' to show relevant commands
 Note that the 'admin.debug.*' commands should only be used based on instructions from support engineer,
 as these might induce high overhead on the functioning of P2M.
 
-Commands that you can use freely are listed below, you can use a space ' ' or a dot '.' as separator between words:
+Commands that you can use freely are listed below, you can use a space ' ' or a dot '.' as separator between words.
+
+Executing a command can change a configuration setting, this will be done in-memory and is not persistent across module reboots. To make a change
+persistent you need to execute the 'admin save' command, this will save changes to the non-volatile-storage (NVS).
+
+
 ```
 ? <enter>
 
@@ -1128,12 +1133,12 @@ admin reboot        reboot P2M in an ordered way
 admin shutdown      stop P2M in an ordered way before power off
 admin debug         report current debug settings
 admin debug reset   reset logging to default factory setting
-admin debug enable  enable a given logging source
-admin debug disable disable a given logging source
+admin debug enable  enable a given logging source (1..63)
+admin debug disable disable a given logging source (1..63)
 admin tz            report current timezone settings
 admin tz reset      reset the timezone parameters to default
-admin tz std        change the standard time zone
-admin tz dst        change the daylight saving time zone
+admin tz std        change the standard time zone, string like "UTC-1"
+admin tz dst        change the daylight saving time zone, string like "UTC-2"
 admin tz dst start  change the start of daylight saving
 admin tz dst end    change the end of daylight saving
 stats               report sub-system statistics
@@ -1166,4 +1171,11 @@ tz dst              change the daylight saving time zone
 tz dst start        change the start of daylight saving
 tz dst end          change the end of daylight saving
 ```
-.
+
+Some sample commands:
+admin debug enable 5
+admin debug disable 5
+admin tz std "UTC-1"
+admin tz dst "UTC-2"
+admin tz dst start 3 4
+admin tz dst end 10 4

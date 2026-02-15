@@ -9,6 +9,12 @@ Here you find the recent downloads of my projects.
     Users of v5.x.y should upgrade to at least v5.02.02 as this will solve a major bug of web interface. 
     Users of v4.x.y.z are also advised to upgrade to the latest v5 but require to do this via 'ESP Web Installer'.
 
+- [Phc2Mqtt v5.02.08 for ESP32 WROVER 4Mb/8Mb (partition v3)](https://sim0njo.github.io/install/e32Phc2Mqtt4Mb/e32P2M-4Mb-pV3-v5.02.08.bin)  
+   Add support for upcoming Home Assistant Core 2026.4
+   
+- [Phc2Mqtt v5.02.06 for ESP32 WROVER 4Mb/8Mb (partition v3)](https://sim0njo.github.io/install/e32Phc2Mqtt4Mb/e32P2M-4Mb-pV3-v5.02.06.bin)  
+   Smaller updates for Home Assistant MQTT Discovery feature  
+   
 - [Phc2Mqtt v5.02.02 for ESP32 WROVER 4Mb/8Mb (partition v3)](https://sim0njo.github.io/install/e32Phc2Mqtt4Mb/e32P2M-4Mb-pV3-v5.02.02.bin)  
    Changed ESP32 Devkitc to Lilygo T-Eth Lite with support for Wifi and Ethernet  
    Changed Webconsole commands, press '?' to get list  
