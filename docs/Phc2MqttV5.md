@@ -408,9 +408,7 @@ Click on a button to enter the related page.
 
 ###Configuration
 
-<img style="float:right;width:352px;height:517px" src="../img/p2m-config-v5.jpg"></img>
-
-Click on a button to enter the related configuration page.
+Click on a button to enter the related configuration page as explained individual below.
 
 &nbsp;  
 &nbsp;  
@@ -431,7 +429,7 @@ Click on a button to enter the related configuration page.
 &nbsp;  
 
 
-###Configure Module
+###Configure Device
 
 <img style="float:right;width:352px;height:405px" src="../img/p2m-config-modu.jpg"></img>
 
