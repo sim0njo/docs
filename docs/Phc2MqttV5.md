@@ -397,14 +397,7 @@ Configuration and management of P2M can be done via a web interface by entering 
 The homepage of P2M is the main menu as shown on the right.
 
 Click on a button to enter the related page.
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
+
 
 ###Configuration
 
@@ -441,11 +434,11 @@ when prompted by the browser, the username is &#39;admin&#39; completed with the
 
 - **MQTT RX Topic Prefix**: Max 31 characters. The MQTT client will subscribe to '&lt;rx-topic-prefix>/#' 
 to receive messages with commands for P2M.  
-We propose to use '&lt;alias>/m2p', where you replace &lt;alias> with a name for your house/location.
+We propose to use '&lt;alias>/m2p', where you replace &lt;alias> with a name for your house/location/device.
 Notice that 'm2p' is choosen intentionally to indicate direction, from MQTT to P2M.  
 
 - **MQTT TX Topic Prefix**: Max 31 characters. This prefix is used when P2M publishes messages to the MQTT broker.  
-We propose to use '&lt;alias>/p2m', where you replace &lt;alias> with a name for your house/location.
+We propose to use '&lt;alias>/p2m', where you replace &lt;alias> with a name for your house/location/device.
 Notice that 'p2m' is choosen intentionally to indicate direction, from P2M to MQTT.
 By using asymetric &lt;rx-topic-prefix> and &lt;tx-topic-prefix> we can avoid receiving the own published messages to &lt;tx-topic-prefix>.
 But you can choose whatever you want.  
@@ -461,7 +454,7 @@ But you can choose whatever you want.
 
 - **Preferred Network Mode**: Here you can select the preferred mode of network connectivity AP/STA/ETH.  
 
-AP mode: P2M will be a standalone access point with SSID set to the Module Device Name. You can connect to it with a Wifi enabled PC.  
+AP mode: P2M will be a standalone access point with SSID set to the Device Name. You can connect to it with a Wifi enabled PC.  
 
 STA mode: P2M will connect to a remote access point and will be available to the whole network. If no Remote AP SSID is specified, P2M will fallback to AP mode.  
 
@@ -562,18 +555,18 @@ to receive messages from the MQTT broker. When SRSD stops it will unsubscribe fr
 
 - **Download Rules**: Allows you to download the active rules file.  
 
-- **Upload & Validate New Rules**: Allows you to load a new set of rules, this is a 2 step procedure. In the first step you select a new rule file
-by pressing 'Choose File', selecting a file and then pressing <b>Start</b>.
+- **Upload & Validate New Rules**: Allows you to load a new set of rules, this is a 2 step procedure.  
 
-During validation the new rule file will be uploaded to a temporary file and parsed for correctness without interfering with the active rules. In a new webpage
+
+Step 1: Upload and validate the new rule file, click 'Choose File', select a file and then press <b>Start</b>.
+Now the new rule file will be uploaded to a temporary file and validated for correctness without interfering with the active rules. In a new webpage
 you will see all lines of the rule file appear with warnings (orange) or errors (red) annotated.
 
-If errors occured in the rule file then you will see only <b>Configure Simple Rule Server</b> button, correct the error in the new rule file, go back and retry validation.
+If errors occured in the rule file, you will see only <b>Configure Simple Rule Server</b> button, correct the error in the new rule file, go back and retry upload & validation.
 
-If no errors occured in the rule file then you will see <b>Configure Simple Rule Server</b> and <b>Activate New Rules</b> buttons.
+If no errors occured in the rule file, you will see <b>Configure Simple Rule Server</b> and <b>Activate New Rules</b> buttons.
 
-If you don't want to activate
-the new rules then go back or press the <b>Configure Simple Rule Server</b> button.
+Step 2: If you don't want to activate the new rules then go back or press the <b>Configure Simple Rule Server</b> button.
 
 If you want to activate the new rules then press the <b>Activate New Rules</b> button,
 now the new rules will be put in service by removing the old rules and replacing them with the new rules. This is a permanent change.
@@ -635,8 +628,8 @@ enter P2M's IP address, press TAB and you should notice that version 3.30 is rep
 Goto the transfer window of the Systemsoftware and press <b>Start</b>, the project data will be transfered to P2M, you can observe this in the <b>Web Console</b>.
 
 The STMD will automatically extract project.ppfx after transferring the project data
-with the Systemsoftware, and will rebuild P2M-list by parsing project.ppfx. It will also generate data describing your PHC 
-system that can be sent out via MQTT so Home Assistant (HA) can discover it (experimental).
+with the Systemsoftware, and will rebuild module-list by parsing project.ppfx. It will also generate data describing your PHC 
+system that can be sent out via MQTT so Home Assistant (HA) can discover it.
 
 &nbsp;
 
@@ -677,7 +670,7 @@ Address 0x00-0x1F : imd
 
 ###Configure STM Reporting
 The STMD reporting sub-system is the one looking at all the packets that are sent over the PHC module bus it is attached to,
-and which reports them in readable format based on P2M-list.
+and which reports them in readable format based on the module-list.
 
 <img style="float:right;width:352px;height:328px" src="../img/p2m-config-repd.jpg"></img>
 
@@ -766,6 +759,9 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 - **Discovery Interval**: The rate at which to publish advertise messages.  
 
 - **Discovery Retain**: Enable/disable the retain flag in the MQTT discovery messages, it is advised to enable retain.  
+
+- **HA Core Version**: Select here the HA core you are using, this to handle interface changes in different versions of HA.
+When you change this parameter you need to re-transfer your project from Systemsoftware to P2M.  
 
 - **Save**: Press this button to save settings.  
 
