@@ -406,13 +406,12 @@ Click on a button to enter the related page.
 &nbsp;  
 &nbsp;  
 &nbsp;  
+&nbsp;  
 
 
 ###Configuration
 
 Click on a button to enter the related configuration page.
-
-&nbsp;  
 
 
 ###Configure Device
