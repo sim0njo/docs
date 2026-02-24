@@ -11,7 +11,6 @@ description: Phc2Mqtt v5.x.y
     When upgrading Phc2Mqtt v4.x.y.z to v5.x.y, you cannot use the OTA firmware upgrade method (uploading via Firmware Upgrade) as a different bootloader is required.
     You need to connect P2M via a USB cable to your PC and use 'ESP Web Installer' and select the 'erase device' option before flashing the module,
     this will completely erase the ESP32 (loosing existing configuration) and rewrite the correct bootloader, partition map and firmware image.  
-&nbsp;  
     For P2M v3.x devices you will need to open the device and insert a downloader module in the ISP connector, you can use this downloader: "https://nl.aliexpress.com/item/1005006323829853.html"
 
 
