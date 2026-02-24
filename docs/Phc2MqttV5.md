@@ -431,7 +431,7 @@ Click on a button to enter the related configuration page as explained individua
 
 ###Configure Device
 
-<img style="float:right;width:352px;height:405px" src="../img/p2m-config-modu.jpg"></img>
+<img style="float:right;width:352px;height:405px" src="../img/p2m-config-device.jpg"></img>
 
 - **Device Name**: Max 31 characters. Defaults to 'p2m_xxxxxx' (where xxxxxx is part of the MAC address), this name will be used throughout
 P2M for things as SSID in case of AP network mode and in HA advertising.  
