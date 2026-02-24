@@ -1,5 +1,5 @@
 ---
-description: Phc2Mqtt v5.x.y.z
+description: Phc2Mqtt v5.x.y
 ---
 
 !!! warning 
@@ -8,9 +8,10 @@ description: Phc2Mqtt v5.x.y.z
     The author has no liability, you use this hardware/software at your own risk.
 
 !!! warning 
-    When upgrading Phc2Mqtt v4.x.y.z to v5.x.y, you cannot use the OTA upgrade method (uploading via Firmware Upgrade) as a different bootloader is required.
+    When upgrading Phc2Mqtt v4.x.y.z to v5.x.y, you cannot use the OTA firmware upgrade method (uploading via Firmware Upgrade) as a different bootloader is required.
     You need to use 'ESP Web Installer' and select the 'erase device' option before flashing the module,
-    this will completely erase the ESP32 (loosing existing configuration) and rewrite the correct bootloader, partition map and firmware image. 
+    this will completely erase the ESP32 (loosing existing configuration) and rewrite the correct bootloader, partition map and firmware image.
+    For P2M v3.x devices you will need to open the device and insert a downloader module in the ISP connector, you can use this downloader: "https://nl.aliexpress.com/item/1005006323829853.html"
 
 ##Abbreviations
 | Term                  | Description                            
@@ -398,24 +399,18 @@ The homepage of P2M is the main menu as shown on the right.
 
 Click on a button to enter the related page.
 
+&nbsp;  
+&nbsp;  
+&nbsp;  
+&nbsp;  
+&nbsp;  
+&nbsp;  
+
 
 ###Configuration
 
-Click on a button to enter the related configuration page as explained individual below.
+Click on a button to enter the related configuration page.
 
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
-&nbsp;  
 &nbsp;  
 &nbsp;  
 &nbsp;  
@@ -752,7 +747,7 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 
 - **Discovery Mode**: Here you select how to advertise the selected channels.  
 
--- **Device**: In this mode each channel is advertised as an entity of an encapsulating PHC device identified as Module Device Name (see Configure Module -> Device Name).
+-- **Device**: In this mode each channel is advertised as an entity of an encapsulating PHC device identified as Device Name (see Configure Device -> Device Name).
 
 -- **Component**: In this mode each channel is advertised as an entity in itself.
 
@@ -815,6 +810,7 @@ From <b>Main Menu</b> select <b>Firmware Upgrade</b> and follow below instructio
 When confirmed the firmware file will be uploaded while showing a rotating caret/progress marker.
 
 After completion of the upload, you need to [reboot](#reboot) P2M to let changes take effect.
+
 
 
 ###Web Console
