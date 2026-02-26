@@ -16,8 +16,8 @@ which can be used in a condition.
 
 A condition compares the value of a state-object to a fixed value to determine the flow of actions.
 
-Finally, the purpose of SRS is to execute actions to realise the automation tasks, 
-this can be sending an MQTT message, execute a STMD command, starting or stopping a clock or timer, ...
+Finally, the purpose of the SRS is to execute actions to realise the automation tasks, 
+this can be sending an MQTT message, execute an STMD command, starting or stopping a clock or timer, ...
 
 ## Rule Syntax
 Rules are expressed in a simplified JSON format, removing redundant decoration, and are stored in a rule file. 
@@ -100,10 +100,10 @@ string         ::= ['"'] *<any-character> ['"']
 ```
 
 ## Internal Objects
-SRS knows a number of internal objects,  
-they do not exist when SRS starts but must be created/updated at runtime via an [action rule](#action-rule) or a [state rule](#state_rule).
+The SRS knows a number of internal objects,  
+they do not exist when the SRS starts but must be created/updated at runtime via an [action rule](#action-rule) or a [state rule](#state_rule).
 
-These objects are persistent as long as SRS is running, when the SRS stops their values are lost.
+These objects exist as long as the SRS is running, when the SRS stops their values are lost.
 
 Each internal object has 3 attributes:  
 - type   : can be clock, state or timer  
@@ -274,7 +274,7 @@ The reason of existence for the system events comes from the startup order of th
 By default the SRS will be started early during module boot. 
 At that moment other sub-systems are not yet started and thus cannot execute actions from init rules.
 
-By allowing SRS to monitor when a given sub-system becomes active, you can take a matching action. 
+By allowing the SRS to monitor when a given sub-system becomes active, you can take a matching action. 
 For instance, you want to know when the MQTT client is connected to the broker so you can publish an 'online' message.
 
 #### Timer Event
@@ -341,7 +341,7 @@ rule      : when:{ mqtt:{topic:test/parent.#/child.0 data:"value0:1"}}
 In addition to event filtering we can add one or more conditions to an action rule to determine a specific flow of actions
 in an **and**/**then**/**else** scheme, where each condition compares an internal object's value to a predefined value.
 
-When a condition refers a non-existing internal object, SRS will use a temporary object with a default value. 
+When a condition refers a non-existing internal object, the SRS will use a temporary object with a default value. 
 Refer to [Internal Objects](#internal-objects) for default values for each type of object.
 
 A condition compares the referenced object's value with the condition-value using an operator,
@@ -398,14 +398,14 @@ condition : and:{state:{topic:temperature eq:25}}
 result    : true
 ```
 One or more **and** conditions can be specified and when evaluating to **true** 
-SRS will execute all following **then** actions after which the rule ends:
+the SRS will execute all following **then** actions after which the rule ends:
 ```
 when:{ *<event> }
 *[and:{ *<cond> } then:{ *<action> } ]
 ```
 This **and**/**then** pattern can be repeated with the same behaviour explained above.
 
-When all previous conditions were not met then SRS will execute all **else** actions, if present:
+When all previous conditions were not met the SRS will execute all **else** actions, if present:
 ```
 *[else <action>]
 ```
@@ -459,7 +459,7 @@ An init rule executes any action but be aware that not all actions may execute a
 When the Phc2Mqtt module boots, the different sub-systems will start each in turn. Typically STMD first, then SRS, Wifi, HTTP server and MQTT client.
 In this case it will not be possible to send an MQTT message in an init rule. Checkout the [system events](#system-event) to handle this problem.
 
-Ofcourse SRS can also be started manually from the configuration page, at that moment the rest of the module is fully operational and
+Ofcourse the SRS can also be started manually from the configuration page, at that moment the rest of the module is fully operational and
 it will be possible to send an MQTT message.
 
 ```
@@ -542,7 +542,7 @@ Parsed as  : key-name=Device      key-value=0x73C9
              key-name=Illuminance key-value=24699
              key-name=Endpoint    key-value=1
 ```
-For each parsed key present in the **keys** parameter, SRS will create/update a state-object to store the key-value.
+For each parsed key present in the **keys** parameter, the SRS will create/update a state-object to store the key-value.
 
 ####examples
 ```
