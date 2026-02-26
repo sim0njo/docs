@@ -1,11 +1,10 @@
 description: Simple Rule Server explained. 
 
 ## Intro
-The Simple Rule Server is a lightweight daemon to accomplish automation tasks and which is integrated into the [Phc2Mqtt](../phc2mqtt) project,
-we will furthermore refer to it as **SRSD**.
+The Simple Rule Server is a lightweight application server to accomplish automation tasks and which is integrated into the [Phc2Mqtt](../phc2mqtt) project,
+we will furthermore refer to it as **SRS**.
 
-Operational behaviour of the SRSD is determined by a set of plain text rules stored in a file (rule-file)
-which is loaded when the SRSD starts.
+Operational behaviour of the SRS is determined by a set of plain text rules stored in a file (rule-file) which is loaded when the SRS starts.
 [Configure Simple Rule Server](../phc2mqtt/#configure-simple-rule-server) describes how this rule-file is provisioned in the Phc2Mqtt project.
 
 In general above rules are triggered by an event (unless otherwise stated), 
@@ -17,8 +16,8 @@ which can be used in a condition.
 
 A condition compares the value of a state-object to a fixed value to determine the flow of actions.
 
-Finally, the purpose of SRSD is to execute actions to realise the automation tasks, 
-this can be sending an MQTT message, execute a PHC command, starting or stopping a clock or timer, ...
+Finally, the purpose of SRS is to execute actions to realise the automation tasks, 
+this can be sending an MQTT message, execute a STMD command, starting or stopping a clock or timer, ...
 
 ## Rule Syntax
 Rules are expressed in a simplified JSON format, removing redundant decoration, and are stored in a rule file. 
