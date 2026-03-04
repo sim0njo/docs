@@ -467,15 +467,15 @@ The lockout can also happen if you forgot the Web Admin Password or if you repla
 
 <b style="color:red">Recovery:</b>
 You can recover from this lockout by pressing and holding the <b>WIFI</b> button, then press/release the <b>EN</b> button.
-P2M will reboot, flashing blue/red module LEDs simultaneous for 3 seconds to confirm the pressed <b>WIFI</b> button,
+P2M will reboot, flashing blue/red LEDs simultaneous for 3 seconds to confirm the pressed <b>WIFI</b> button,
 you can release the <b>WIFI</b> button by now.  
 
-P2M will boot in AP-mode and turn the red module LED on to indicate this, after which you can connect to your module's AP
+P2M will boot in AP-mode and turn the red LED on to indicate this, after which you can connect to your device's AP
 and access it on 192.168.4.1 with a web browser without password.
 Change the Wifi settings to the correct values, save them and reboot P2M to revert to normal STA-mode operation.  
 
 ###Configure Logging
-P2M has extensive logging features that enable you to monitor module behaviour, but also to give you support in case of problems.
+P2M has extensive logging features that enable you to monitor device behaviour, but also to give you support in case of problems.
 
 Some of them generate serious overhead so they must remain inactive as much as possible and should only be set when asked by support team.
 
@@ -494,7 +494,7 @@ this logging can be observed in the [Web Console](#web-console).
 fill out the IP address and port (default 514) of the target syslog deamon.  
 
 - **Save**: Press this button to save settings, Serial Loglevel, Web Loglevel and Syslog Loglevel changes will have immediate effect,
-the other settings require a module [reboot](#reboot) to let changes take effect.
+the other settings require a device [reboot](#reboot) to let changes take effect.
 
 ###Configure MQTT Client
 The MQTT client is the interface to the MQTT broker (server), when enabled
@@ -639,7 +639,7 @@ the PHC modules. Commands coming in from MQTT client will be executed, events co
 
 - **Module-List**:
 
-The window below lists all modules as known in your project, the left column is the logical module type that will be used in reporting/commands,
+The window below lists all PHC modules as known in your project, the left column is the logical module type that will be used in reporting/commands,
 the right column is the physical module type which is more detailed.
 
 Both reporting and command handling sub-systems use this module-list to correctly convert PHC module bus packets to/from readable format.
@@ -689,7 +689,7 @@ The MQTT client will prepend '&lt;tx-topic-prefix>/' to the topic explained belo
 **xPhcLogd compatible**: This format equals the reporting done by the xPhcLogd tool,
 and reports a change on each channel separately.
 
-This can lead to a storm of reports because STMD reports each channel the first time a module is seen, 
+This can lead to a storm of reports because STMD reports each channel the first time a PHC module is seen, 
 for example an output module will have all 8 outputs reported.
 ```
 topic=boo/<mod>.<addr>        data=[<value>]
@@ -996,8 +996,8 @@ You configure it by entering following JSON formatted data in the channel descri
 
   {"desc":"&lt;description>","comp":"button","&lt;method>":"&lt;PHC-cmd>*[; &lt;PHC-cmd>]"}
   
-This will result in a MQTT message published to topic "&lt;Module.RxTopicPfx>/cmd/ccmd" with payload/data "&lt;PHC-cmd>*[; &lt;PHC-cmd>", 
-where &lt;Module.RxTopicPfx> is defined in Configure Module -> MQTT RX Topic Prefix.
+This will result in a MQTT message published to topic "&lt;Device.RxTopicPfx>/cmd/ccmd" with payload/data "&lt;PHC-cmd>*[; &lt;PHC-cmd>", 
+where &lt;Device.RxTopicPfx> is defined in Configure Device -> MQTT RX Topic Prefix.
 
 
 - **Input Buttons**:
@@ -1015,7 +1015,7 @@ Property/method override samples:
 
   {"desc":"AllOff","comp":"button","press":"imd.0.in15.ingt2"}
 
-Pressing the 'press' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in15.ingt2"  
+Pressing the 'press' button in the HA dashboard sends a MQTT publish with topic "&lt;Device.RxTopicPfx>/cmd/ccmd" and data "imd.0.in15.ingt2"  
 
 
 - **Shutter Group Buttons**:
@@ -1032,14 +1032,24 @@ Methods:
 -- **stop**: must be mapped to a 'stop' trigger for the shutter group, dfault is "stop"
 
 Property/method override samples:  
--- Given a shutter group was defined in STM programming that uses imd.0.in9 to trigger the 'up' action and imd.0.in10 to trigger the 'down' action, 
-we can specify this as: 
+-- Given a shutter group was defined in STM programming that uses 'imd.0.in9.ingt1' to trigger the 'up' action, 'imd.0.in10.ingt1' to trigger the 'down' action
+and 'imd.0.in9.ingt0' to trigger the 'stop; action, we can specify this as: 
 
   {"desc":"shutterGroup","comp":"button","up":"imd.0.in9.ingt1","down":"imd.0.in10.ingt1","stop":"imd.0.in9.ingt0"}
   
-Pressing the 'up' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in9.ingt1"  
-Pressing the 'down' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in10.ingt1"  
-Pressing the 'stop' button in the HA dashboard sends a MQTT publish with topic "&lt;Module.RxTopicPfx>/cmd/ccmd" and data "imd.0.in9.ingt0"
+Pressing the 'up' button in the HA dashboard sends a MQTT publish with topic "&lt;Device.RxTopicPfx>/cmd/ccmd" and data "imd.0.in9.ingt1"  
+Pressing the 'down' button in the HA dashboard sends a MQTT publish with topic "&lt;Device.RxTopicPfx>/cmd/ccmd" and data "imd.0.in10.ingt1"  
+Pressing the 'stop' button in the HA dashboard sends a MQTT publish with topic "&lt;Device.RxTopicPfx>/cmd/ccmd" and data "imd.0.in9.ingt0"
+
+&nbsp;  
+-- Alternatively, given a shutter group was defined in SRS programming that uses 'living.shutter.up' to trigger the 'up' action, 'living.shutter.down' to trigger the 'down' action
+and 'living.shutter.stop' to trigger the 'stop' action, we can specify this as: 
+
+  {"desc":"shutterGroup","comp":"button","up":"living.shutter.up","down":"living.shutter.down","stop":"living.shutter.stop"}
+  
+Pressing the 'up' button in the HA dashboard sends a MQTT publish with topic "&lt;Device.RxTopicPfx>/cmd/ccmd" and data "living.shutter.up"  
+Pressing the 'down' button in the HA dashboard sends a MQTT publish with topic "&lt;Device.RxTopicPfx>/cmd/ccmd" and data "living.shutter.down"  
+Pressing the 'stop' button in the HA dashboard sends a MQTT publish with topic "&lt;Device.RxTopicPfx>/cmd/ccmd" and data "living.shutter.stop"
 
 
 
