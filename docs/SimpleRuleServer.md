@@ -564,9 +564,9 @@ event       : topic=sta/omd.0 data=out0:1,out4:0,out7:1
 rule        : state:{
                stmd:{topic:sta/omd.0 keys:out#}
               }
-state-object: topic=sta/omd.0.out0 value=1
-              topic=sta/omd.0.out4 value=0
-              topic=sta/omd.0.out7 value=1
+state-object: topic=sta/omd.0/out0 value=1
+              topic=sta/omd.0/out4 value=0
+              topic=sta/omd.0/out7 value=1
 ```
 ```
 event       : topic=tzb/tele/SENSOR data={"Device":"0x73C9","Name":"outside/lumi_nw","Illuminance":24699,"Endpoint":1}

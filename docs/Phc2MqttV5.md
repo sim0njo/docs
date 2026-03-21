@@ -896,14 +896,14 @@ Property/method override samples:
 
 
 ***Output Channels***  
-Are advertised as different entity types (light/cover/...) depending on channel type, see further.
+Are advertised as different entity types (light/switch/cover/...) depending on channel type, see further.
 
 They have methods (on/off,up/down/stop,...) to control the channel, where each method is linked to a default PHC-cmd as indicated per output type. This can be overridden as explained before. Make sure the overriding PHC-cmd is valid as no validation is performed, refer to [PHC Cmd Reference](#phc-cmd-reference).
 
 
 - **Output modules output** (i.e. omd.0.out0): 
 
-Are advertised as 'light' entities with following properties and methods.
+Are advertised by default as 'light' entities with following properties and methods.
 
 Properties:  
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
@@ -920,6 +920,27 @@ Property/method override samples:
 -- Similar you can change the icon for an output that controls a ventilator like this:
 
   {"desc":"Bathroom Ventilator","icon":"mdi:fan"}
+
+
+Alternatively you can advertise an output channel as 'switch' entities
+
+Properties:  
+-- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/switch/#device-class">device_class</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement. I.e. 'door'  
+-- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
+
+Methods:  
+-- **on**: defaults to PHC-cmd 'on' (results in omd.0.out0.on)  
+-- **off**: defaults to PHC-cmd 'off' (results in omd.0.out0.off)
+  
+Property/method override samples:  
+-- The basic definition of a switch entity:
+
+  {"desc":"Outlet 1","comp":"switch"}
+
+-- You can enhance above basic swith and display it as an outlet with following:
+
+  {"desc":"Outlet 1","comp":"switch","dc":"outlet"}
+
 
 
 - **Shutter modules output** (i.e. jrm.0.out0): 
