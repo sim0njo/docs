@@ -860,7 +860,7 @@ Each of these have default values that can be overridden by modifying the channe
 **How will channels be advertised?**
 
 ***Input Channels***  
-Are advertised as 'binary_sensor' entities, they report their state as 'on' or 'off' and are represented with the default device_class (None).
+**A**re advertised as 'binary_sensor' entities, they report their state as 'on' or 'off' and are represented with the default device_class (None).
 
 Properties:  
 -- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/binary_sensor/#device-class">device_class</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement. I.e. 'door'  
@@ -903,7 +903,7 @@ They have methods (on/off,up/down/stop,...) to control the channel, where each m
 
 - **Output modules output** (i.e. omd.0.out0): 
 
-Are advertised by default as 'light' entities with following properties and methods.
+**A**re advertised by default as 'light' entities with following properties and methods.
 
 Properties:  
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
@@ -922,10 +922,10 @@ Property/method override samples:
   {"desc":"Bathroom Ventilator","icon":"mdi:fan"}
 
 
-Alternatively you can advertise an output channel as 'switch' entities
+**A**lternatively you can advertise an output channel as 'switch' entity
 
 Properties:  
--- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/switch/#device-class">device_class</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement. I.e. 'door'  
+-- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/switch/#device-class">device_class</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement. I.e. 'outlet'  
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
 
 Methods:  
@@ -945,7 +945,7 @@ Property/method override samples:
 
 - **Shutter modules output** (i.e. jrm.0.out0): 
 
-Are advertised as 'cover' entities with following properties and methods.
+**A**re advertised as 'cover' entities with following properties and methods.
 
 Properties:  
 -- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/cover/#device-class">'device_class'</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement, ...  
@@ -964,7 +964,7 @@ Property/method override samples:
 
 - **Input modules LED** (i.e. imd.0.led0):
 
-Are advertised as 'light' component with following properties and methods.
+**A**re advertised as 'light' component with following properties and methods.
 
 Properties:  
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
@@ -981,7 +981,7 @@ Property/method override samples:
 
 - **Input modules merker** (i.e. imw.0.mrk0):
 
-Are advertised as 'light' component with following properties and methods.
+**A**re advertised as 'light' component with following properties and methods.
 
 Properties:  
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
@@ -998,7 +998,7 @@ Property/method override samples:
   
 - **Dimmer modules output/level** (i.e. dim.0.out0 or dim.0.lvl0):
 
-Are advertised as 'light' component.
+**A**re advertised as 'light' component.
 
 Properties:  
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
@@ -1023,7 +1023,7 @@ where &lt;Device.RxTopicPfx> is defined in Configure Device -> MQTT RX Topic Pre
 
 - **Input Buttons**:
 
-Are defined on a spare/vitrual input channel and are advertised as 'button' component with following properties and methods.
+**A**re defined on a spare/vitrual input channel and are advertised as 'button' component with following properties and methods.
 
 Properties:  
 -- **icon**: overrides the default icon linked to the entity, select one from the list found when clicking on the entity in Home Assistant dashboard -> Settings -> Icon
@@ -1041,7 +1041,7 @@ Pressing the 'press' button in the HA dashboard sends a MQTT publish with topic 
 
 - **Shutter Group Buttons**:
 
-Are defined on a spare/virtual shutter channel and are advertised as 'cover' component with following properties and methods.
+**A**re defined on a spare/virtual shutter channel and are advertised as 'cover' component with following properties and methods.
 
 Properties:  
 -- **dc**: overrides the default HA <a href="https://www.home-assistant.io/integrations/cover/#device-class">'device_class'</a> for the channel, this determines how the entity is represented on a dashboard: it's icon, classification, unit of measurement, ...  
