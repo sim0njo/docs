@@ -736,9 +736,9 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 
 
 ###Configure STM HA Discovery
-P2M will advertise all selected channels inside a device container, so you will see them together in Home Assistant.  
+P2M will advertise all selected channels inside a device container, so you will see them together in Home Assistant under a device named <Module Device Name>.  
 
-P2M will also use the Module Device Name (see Configure Device -> Device Name) to make
+P2M will also use the <Module Device Name> (see Configure Device -> Device Name) to make
 all channel entity-id's unique, this will allow you to use multiple P2M devices on the same HA installation, for instance a 'p2mLive' which represents the live PHC system 
 and a 'p2mTest' that is used for testing purposes (although this can also be another live system).
 
