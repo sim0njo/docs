@@ -736,18 +736,16 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 
 
 ###Configure STM HA Discovery
+P2M will advertise all selected channels inside a device container, so you will see them together in Home Assistant.  
+
+P2M will also use the Module Device Name (see Configure Device -> Device Name) to make
+all channel entity-id's unique, this will allow you to use multiple P2M devices on the same HA installation, for instance a 'p2mLive' which represents the live PHC system 
+and a 'p2mTest' that is used for testing purposes (although this can also be another live system).
 
 
-
-<img style="float:right;width:352px;height:400px" src="../img/p2m-config-ha-disco-v5.jpg"></img>
+<img style="float:right;width:352px;height:400px" src="../img/p2m-config-ha-disco-v5-2.jpg"></img>
 
 - **Discovery Topic Prefix**: The prefix of the topic to which to publish MQTT messages.  
-
-- **Discovery Mode**: Here you select how to advertise the selected channels.  
-
--- **Device**: In this mode each channel is advertised as an entity of an encapsulating PHC device identified as Device Name (see Configure Device -> Device Name).
-
--- **Component**: In this mode each channel is advertised as an entity in itself.
 
 - **Discovery Interval**: The rate at which to publish advertise messages.  
 
@@ -759,7 +757,8 @@ When you change this parameter you need to re-transfer your project from Systems
 - **Save**: Press this button to save settings.  
 
 - **Advertise Now**: Press this button to publish P2M capabilities to HA.
-  Refer to [Advertising to Home Assistant](#advertising-to-home-assistant) for detailed explanation.
+  Refer to [Advertising to Home Assistant](#advertising-to-home-assistant) for detailed explanation. You can also start the advertising from Webconsole using: stmd advertise
+  
 
 
 
