@@ -736,10 +736,11 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 
 
 ###Configure STM HA Discovery
-P2M will advertise all selected channels inside a device container, so you will see them together in Home Assistant under a device named <b>Module Device Name</b>.  
+P2M can advertise all selected PHC channels to Home Assistant with 1 click, which makes it easy and repeatable to visualize and control you PHC system using HA.
 
-P2M will also use the <b>Module Device Name</b> (see Configure Device -> Device Name) to make
-all channel entity-id's unique, this will allow you to use multiple P2M devices on the same HA installation, for instance a 'p2mLive' which represents the live PHC system 
+Starting with v5.03.05 we removed the Discovery Mode setting and always report all selected channels under 1 Phc2Mqtt device container. 
+We also added the <b>Module Device Name</b> (see Configure Device -> Device Name) to all channel entity-id's, this makes the entity-id's unique accross
+multiple P2M devices on the same HA installation. For instance a 'p2mLive' which represents the live PHC system 
 and a 'p2mTest' that is used for testing purposes (although this can also be another live system).
 
 
