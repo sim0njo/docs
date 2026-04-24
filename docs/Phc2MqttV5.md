@@ -610,19 +610,18 @@ This project config data is stored in 2 files:
 the Systemsoftware.
 
 This ZIP file contains a number of files, but P2M is only interested in project.ppfx, which contains an XML formatted
-list of PHC modules present in your PHC system. STMD parses that XML file to build a module-list which is needed for correct operation
+list of PHC modules present in your PHC system. STMD extracts and parses this XML file to build a module-list which is needed for correct operation
 of the reporting and command handling sub-systems.
 
 To transfer the project data:  
-- Enable the PHC Management Interface  
-- Open your project.zpfx file in the Systemsoftware, goto the properties of the STM in your project and
-enter P2M's IP address, press TAB and you should notice that version 3.30 is reported.
+- Enable the PHC Management Interface and reboot P2M to let changes take effect.  
+- Open your project.zpfx file in the v3.2.8 Systemsoftware and goto the properties of the STM in your project.  
+- Enter the P2M IP address, press 2x TAB and you should notice that version 3.30 is reported in a green background.  
+- Goto the transfer window of the v3.2.8 Systemsoftware and press <b>Start</b>, the project data will be transfered to P2M, you can observe this in the <b>Web Console</b>.
 
-Goto the transfer window of the Systemsoftware and press <b>Start</b>, the project data will be transfered to P2M, you can observe this in the <b>Web Console</b>.
 
-The STMD will automatically extract project.ppfx after transferring the project data
-with the Systemsoftware, and will rebuild module-list by parsing project.ppfx. It will also generate data describing your PHC 
-system that can be sent out via MQTT so Home Assistant (HA) can discover it.
+The STMD will automatically extract project.ppfx after the project data is transferred and will rebuild the module-list by parsing project.ppfx. 
+It will also generate metadata describing your PHC system that can be sent out via MQTT (advertise) such that Home Assistant (HA) can discover it.
 
 &nbsp;
 
@@ -630,11 +629,13 @@ system that can be sent out via MQTT so Home Assistant (HA) can discover it.
 
 - **Admin Mode**:
 
-'Proxy': The STMD analyzes packets on the PHC module bus and reports events/status via the MQTT client,
+'Proxy': In this mode STMD analyzes packets on the PHC module bus and reports events/status via the MQTT client,
 it also relays commands coming in from MQTT client to the real (remote) STM in your PHC system via the External Client interface.
 
-'PassiveSTMv3': The STMD replaces the real STM of your PHC system, it is the master of the PHC module bus and communicates directly with
-the PHC modules. Commands coming in from MQTT client will be executed, events coming from PHC modules are only reported to MQTT client/SRS daemon.  
+'PassiveSTMv3': In this mode STMD replaces the real STM of your PHC system, it is the master of the PHC module bus and communicates directly with
+the PHC modules. Commands coming in from MQTT client will be validated, converted to binary format and sent to the PHC module bus,
+events coming from PHC modules are reported to MQTT client and/or Simple Rule Server.
+Please note that the basic/functional programming defined in the SystemSoftware is NOT executed.
 
 
 - **Module-List**:
@@ -642,10 +643,10 @@ the PHC modules. Commands coming in from MQTT client will be executed, events co
 The window below lists all PHC modules as known in your project, the left column is the logical module type that will be used in reporting/commands,
 the right column is the physical module type which is more detailed.
 
-Both reporting and command handling sub-systems use this module-list to correctly convert PHC module bus packets to/from readable format.
+Both reporting and command handling sub-systems use this module-list to correctly convert PHC module bus binary packets to/from readable format.
 
-When STMD sees activity from PHC modules not in P2M-list, it will add them with the default module type depending on the PHC module address.
-Note that this may lead to wrong interpretation of modules packets and wrong commands offered. So make your PHC project in the Systemsoftware as accurate as
+When STMD sees activity from PHC modules not in the module-list, it will add them with the default module type depending on the PHC module address.
+Note that this may lead to wrong interpretation of module packets and wrong commands offered. So make your PHC project in the SystemSoftware as accurate as
 possible to avoid issues.
 ```
 Address 0x00-0x1F : imd
@@ -662,14 +663,14 @@ Address 0x00-0x1F : imd
 
 
 ###Configure STM Reporting
-The STMD reporting sub-system is the one looking at all the packets that are sent over the PHC module bus it is attached to,
+The STMD reporting sub-system is the one looking at all the binary packets that are sent over the PHC module bus it is attached to,
 and which reports them in readable format based on the module-list.
 
 <img style="float:right;width:352px;height:328px" src="../img/p2m-config-repd.jpg"></img>
 
 - **Reporting Format**: The reporting format, see below.  
 
-- **Data Format**: How a zero or one state is reported, either binary as '0'/'1' or as boolean as 'false'/'true'.  
+- **Data Format**: Defines how a zero or one state is reported, either binary as '0'/'1' or as boolean as 'false'/'true'.  
 
 - **Report To MQTT**: Enable/disable reporting via the MQTT client on a per type basis
 (boo=boot, evt=event, sta=state, cmd=command).
@@ -679,7 +680,7 @@ The MQTT client will prepend '&lt;tx-topic-prefix>/' to the topic explained belo
 - **Report To MQTT Retain**: Enable/disable the retain flag of the MQTT message on a per type basis
 (boo=boot, evt=event, sta=state, cmd=command).  
 
-- **Report To SRS**: Enable/disable reporting to the SRSD on a per type basis
+- **Report To SRS**: Enable/disable reporting to the Simple Rule Server on a per type basis
 (boo=boot, evt=event, sta=state, cmd=command).  
 
 - **Save**: Press this button to save settings after which they take effect (no need to reboot).
@@ -704,7 +705,7 @@ topic=evt/imd.0.in0  data=ingt0
 topic=sta/omd.0.out3 data=1
 topic=cmd/omd.0.out3 data=ontimed.300
 ```
-**Text format**: Groups reportable items per PHC module in plain text using key/value pairs:
+**Text format**: This format groups reportable items per PHC module in plain text using key/value pairs:
 ```
 topic=boo/<mod>.<addr> data=[attrib:<value>]
 topic=evt/<mod>.<addr> data=<chan>:<event> *[,<chan>:<event>]
@@ -718,7 +719,7 @@ topic=evt/imd.0 data=in0:ingt0
 topic=sta/omd.0 data=out0:1,out1:0,out2:0,out3:1,out4:0,out5:0,out6:0,out7:0
 topic=cmd/omd.0 data=out3:ontimed.300
 ```
-**JSON format**: Groups reportable items per PHC module in JSON syntax using key/value pairs:
+**JSON format**: This format groups reportable items per PHC module in JSON syntax using key/value pairs:
 ```
 topic=boo/<mod>.<addr> data={ [attrib:<value>]                  }
 topic=evt/<mod>.<addr> data={ <chan>:<event> *[,<chan>:<event>] }
@@ -736,12 +737,10 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 
 
 ###Configure STM HA Discovery
-P2M can advertise all selected PHC channels to Home Assistant with 1 click, which makes it easy and repeatable to visualize and control you PHC system using HA.
+P2M can advertise selected PHC input/output channels to Home Assistant in an easy and repeatable way, 
+refer to [Advertising to Home Assistant](#advertising-to-home-assistant) for detailed explanation.
 
-Starting with v5.03.05 we removed the Discovery Mode setting and always report all selected channels under 1 Phc2Mqtt device container. 
-We also added the <b>Module Device Name</b> (see Configure Device -> Device Name) to all channel entity-id's, this makes the entity-id's unique accross
-multiple P2M devices on the same HA installation. For instance a 'p2mLive' which represents the live PHC system 
-and a 'p2mTest' that is used for testing purposes (although this can also be another live system).
+Starting with v5.03.05 we removed the <b>Discovery Mode</b> setting and always report selected channels under 1 Phc2Mqtt device container.
 
 
 <img style="float:right;width:352px;height:400px" src="../img/p2m-config-ha-disco-v5-2.jpg"></img>
@@ -833,8 +832,18 @@ After a few seconds the webpage will be redirected to P2M's homepage.
 ##Additional Info
 
 ###Advertising your PHC system to Home Assistant
-Home Assistant (HA) is a leading automation integrator and we are trying to provide an easy way to advertise the capabilities of your
-PHC system to HA. This is done by publishing selected channels via MQTT to the HA discovery topic.
+Home Assistant (HA) is a leading automation integrator and P2M is providing an easy and repeatable way to advertise the capabilities of your
+PHC system to HA. This is done by publishing configuration data of selected channels via MQTT to the HA discovery topic.
+
+From v5.03.05 on we added the <b>Module Device Name</b> (see Configure Device -> Device Name) to all channel entity-id's, this makes the entity-id's unique accross
+multiple P2M devices on the same HA installation. 
+
+For instance, you have a 'p2mLive' which represents the live PHC system and a 'p2mTest' that is used for testing purposes (although this can also be another live system),
+this will generate different entity-id's for a similar module/channel combination. I.e. 'p2mLive_omd_0_out0' versus 'p2mTest_omd_0_out0'.
+
+This new implementation requires you to re-transfer your project from SystemSw to P2M, as all advertising metadata inside P2M is generated at that time.
+
+
 
 **Which channels can be advertised?**  
 Actually any input and output channel and also function buttons.
