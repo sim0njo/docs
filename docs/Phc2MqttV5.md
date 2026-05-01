@@ -743,7 +743,7 @@ refer to [Advertising to Home Assistant](#advertising-to-home-assistant) for det
 Starting with v5.03.05 we removed the <b>Discovery Mode</b> setting and always report selected channels under 1 Phc2Mqtt device container.
 
 
-<img style="float:right;width:352px;height:400px" src="../img/p2m-config-ha-disco-v5-2.jpg"></img>
+<img style="float:right;width:352px;height:340px" src="../img/p2m-config-ha-disco-v5-3.jpg"></img>
 
 - **Discovery Topic Prefix**: The prefix of the topic to which to publish MQTT messages.  
 
