@@ -11,10 +11,10 @@ Here you find the recent downloads of my projects.
 
 - [Phc2Mqtt v5.03.05 for ESP32 WROVER 4Mb/8Mb (partition v3)](https://sim0njo.github.io/install/e32Phc2Mqtt4Mb/e32P2M-4Mb-pV3-v5.03.05.bin)  
    Several Home Assistant MQTT Discovery improvements:  
-   - entity_id's are now prefixed with <device-name> (ref Configure Device) allowing multiple P2M's connecting to the same HA  
-   - shutter control now shows shutter as stopped or moving up/down  
-   - removed HA Discovery Mode, now we always use 'Device' model  
-   - updated CLI in Webconsole, press ? for more details  
+   -- entity_id's are now prefixed with <device-name> (ref Configure Device) allowing multiple P2M's connecting to the same HA  
+   -- shutter control now shows shutter as stopped or moving up/down  
+   -- removed HA Discovery Mode, now we always use 'Device' model  
+   -- updated CLI in Webconsole, press ? for more details  
    
 - [Phc2Mqtt v5.02.08 for ESP32 WROVER 4Mb/8Mb (partition v3)](https://sim0njo.github.io/install/e32Phc2Mqtt4Mb/e32P2M-4Mb-pV3-v5.02.08.bin)  
    Add support for upcoming Home Assistant Core 2026.4
