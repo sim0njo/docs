@@ -740,7 +740,7 @@ To see the differences you can later on observe them in the [Web Console](#web-c
 P2M can advertise selected PHC input/output channels to Home Assistant in an easy and repeatable way, 
 refer to [Advertising to Home Assistant](#advertising-to-home-assistant) for detailed explanation.
 
-Starting with v5.03.05 we removed the <b>Discovery Mode</b> setting and always report selected channels under 1 Phc2Mqtt device container.
+Starting with v5.03.05 we removed the <b>HA Core Version</b> and <b>Discovery Mode</b> settings and always report selected channels under 1 Phc2Mqtt device container.
 
 
 <img style="float:right;width:352px;height:340px" src="../img/p2m-config-ha-disco-v5-3.jpg"></img>
@@ -750,9 +750,6 @@ Starting with v5.03.05 we removed the <b>Discovery Mode</b> setting and always r
 - **Discovery Interval**: The rate at which to publish advertise messages.  
 
 - **Discovery Retain**: Enable/disable the retain flag in the MQTT discovery messages, it is advised to enable retain.  
-
-- **HA Core Version**: Select here the HA core you are using, this to handle interface changes in different versions of HA.
-When you change this parameter you need to re-transfer your project from Systemsoftware to P2M.  
 
 - **Save**: Press this button to save settings.  
 
