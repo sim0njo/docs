@@ -13,13 +13,15 @@ Here you find the recent downloads of my projects.
    Several Home Assistant MQTT Discovery improvements:  
    &nbsp; - entity_id's are now prefixed with <device-name> (ref Configure Device) allowing multiple P2M's connecting to the same HA  
    &nbsp; - shutter control now shows shutter as stopped or moving up/down  
-   &nbsp; - removed HA Discovery Mode, now we always use 'Device' model  
+   &nbsp; - removed HA Discovery Mode configuration setting, now we always use 'Device' model  
+   &nbsp; - removed HA Core Version configuration setting
    &nbsp;
+   
    Updated CLI in Webconsole, press ? for more details  
    MQTT client can be started/stopped in cofiguration page
    
 - [Phc2Mqtt v5.02.08 for ESP32 WROVER 4Mb/8Mb (partition v3)](https://sim0njo.github.io/install/e32Phc2Mqtt4Mb/e32P2M-4Mb-pV3-v5.02.08.bin)  
-   Add support for upcoming Home Assistant Core 2026.4
+   Add support for upcoming Home Assistant Core Version 2026.4
    
 - [Phc2Mqtt v5.02.06 for ESP32 WROVER 4Mb/8Mb (partition v3)](https://sim0njo.github.io/install/e32Phc2Mqtt4Mb/e32P2M-4Mb-pV3-v5.02.06.bin)  
    Smaller updates for Home Assistant MQTT Discovery feature  
