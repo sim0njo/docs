@@ -9,7 +9,12 @@ Here you find the recent downloads of my projects.
     Users of v5.x.y should upgrade to at least v5.02.02 as this will solve a major bug of the web interface. 
     Users of v4.x.y.z are also advised to upgrade to the latest v5 but require to do this via 'ESP Web Installer'.
 
-- [Phc2Mqtt v5.03.07 for ESP32 WROVER 4Mb/8Mb (partition v3)](https://sim0njo.github.io/install/e32Phc2Mqtt4Mb/e32P2M-4Mb-pV3-v5.03.07.bin)  
+- [Phc2Mqtt v5.04.02 for ESP32 WROVER 4Mb/8Mb (partition v3)](https://sim0njo.github.io/install/e32Phc2Mqtt4Mb/e32P2M-4Mb-pV3-v5.04.02.bin)  
+   Fix bug in v5.03.07 that failed to save configuration settings.
+   Fix bug in PassiveSTMv3 mode that sent outgoing commands 2 times
+   
+
+- Phc2Mqtt v5.03.07 for ESP32 WROVER 4Mb/8Mb (partition v3)  
    Several Home Assistant MQTT Discovery improvements:  
    &nbsp; - entity_id's are now prefixed with <device-name> (ref Configure Device) allowing multiple P2M's connecting to the same HA  
    &nbsp; - shutter control now shows shutter as stopped or moving up/down  
