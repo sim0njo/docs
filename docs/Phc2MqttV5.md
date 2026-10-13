@@ -458,12 +458,23 @@ When you leave Remote AP SSID empty, P2M will revert to AP-mode.
 
 - **Save**: Press this button to save settings, then [reboot](#reboot) P2M to let changes take effect.  
 
+<b style="color:red">From v5.04.02 onwards:</b>
+Starting in version 5.04.02 you will be able to specify 2 remote AP's (SSID + password), initially the first remote AP (1) is the default.  
+
+When STA mode is selected, P2M will try to connect to the default remote AP, if this fails it will retry the connection 3x with a 20 second interval. 
+In total this will take about 70 seconds, this should be enough in case your remote AP is restarting/rebooting.  
+
+If all retries failed AND you specified a second remote AP, then P2M will switch the default to the second remote AP and restart the connection sequence. 
+This default is saved in NV memory.
+
+If no second remote AP is specified then the connection sequence is restarted on the existing default remote AP.  
+
 <b style="color:red">Lockout:</b>
-If you entered a wrong Remote AP SSID/Password or the remote AP fails, connecting to the Wifi network will fail. 
+If you entered a wrong Remote AP SSID/Password or the remote AP fails, connecting to the remote AP will fail. 
 P2M will continiously blink the blue LED and retry connecting after 30 seconds until connection succeeds. 
 This can cause a lockout where you cannot access P2M.
 
-The lockout can also happen if you forgot the Web Admin Password or if you replaced your Wifi network with another.  
+The lockout can also happen if you forgot the Web Admin Password or if you replaced your remote AP with another.  
 
 <b style="color:red">Recovery:</b>
 You can recover from this lockout by pressing and holding the <b>WIFI</b> button, then press/release the <b>EN</b> button.
